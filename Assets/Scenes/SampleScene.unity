@@ -1193,16 +1193,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 530795c2e9d7d114e858b76c8ea99e4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveSpeed: 7
-  JumpPower: 3
+  _playerData: {fileID: 11400000, guid: e4529dfcd6b35ff42a282d83f58bb2eb, type: 2}
   _currentStamina: 1
-  _staminaCost: 0.2
-  _staminaRecovery: 0.6
-  _rollStaminaCost: 0.3
   _pushDirection: {x: 0, y: 0, z: 0}
-  _pushPower: 10
-  _pushDuration: 0.2
-  _pushTimer: 0
 --- !u!143 &1410090551
 CharacterController:
   m_ObjectHideFlags: 0

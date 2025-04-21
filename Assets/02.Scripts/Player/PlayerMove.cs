@@ -4,43 +4,29 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
+    private const float GRAVITY = -9.81f;
+    private const int JUMPCOUNT = 2;
 
     CharacterController _characterController;
 
-    [Header("이동")]
-    public float RunSpeed = 12f;
-    public float WalkSpeed = 7f;
-    private float _moveSpeed;
-    public float JumpPower = 5f;
+    [SerializeField] private PlayerSO _playerData;
 
-    private const float GRAVITY = -9.81f;
-    private const int JUMPCOUNT = 2;
+    [SerializeField] private float _currentStamina = 1f;
+
     private Vector3 _velocity;
     private float _yVelocity;
-    private int _jumpCount = JUMPCOUNT;
+
     private bool _wantsToRun;
     private bool _canRun = true;
     private bool _isRunning;
-
-    [Header("스테미너")]
-    [SerializeField] private float _currentStamina = 1f;
-    [SerializeField] private float _staminaCost = 0.05f;
-    [SerializeField] private float _staminaRecovery = 0.4f;
-    [SerializeField] private float _rollStaminaCost = 0.3f;
-
-    [Header("구르기")]
     [SerializeField] private Vector3 _pushDirection = Vector3.zero;
-    [SerializeField] private float _pushPower = 10f;
-    [SerializeField] private float _pushDuration = 0.2f;
-    [SerializeField] private float _pushTimer = 0f;
 
-    [Header("벽타기")]
-    [SerializeField] private float _wallClimbCooldown = 0.5f;
-    private float _wallClimbCooldownTimer = 0f;
-    private bool _isStaminaDepleted = false;
     private bool _isClimbing;
     private bool _wasClimbing;
+    private float _moveSpeed;
+    private float _pushTimer = 0f;
 
+    private int _jumpCount = JUMPCOUNT;
 
     private void Awake()
     {
@@ -82,6 +68,7 @@ public class PlayerMove : MonoBehaviour
             {
                 _yVelocity = 0f;
             }
+
             _yVelocity += GRAVITY * Time.deltaTime;
             dir.y = _yVelocity;
         }
@@ -98,23 +85,18 @@ public class PlayerMove : MonoBehaviour
         if (isUsingStamina)
         {
             if (_isRunning)
-                _currentStamina -= _staminaCost * Time.deltaTime;
+                _currentStamina -= _playerData.StaminaCost * Time.deltaTime;
             if (_isClimbing)
-                _currentStamina -= _staminaCost * Time.deltaTime;
+                _currentStamina -= _playerData.StaminaCost * Time.deltaTime;
         }
         else if (!isFallingFromWall && _characterController.isGrounded)
         {
-            _currentStamina += _staminaRecovery * Time.deltaTime;
+            _currentStamina += _playerData.StaminaRecovery * Time.deltaTime;
         }
     }
 
     private void HandleWallClimb()
     {
-        if (_wallClimbCooldownTimer > 0f)
-        {
-            _isClimbing = false;
-            return;
-        }
 
         Vector3 origin = transform.position + Vector3.up;
         Vector3 direction = transform.forward;
@@ -124,22 +106,14 @@ public class PlayerMove : MonoBehaviour
 
         if (Physics.Raycast(origin, direction, out RaycastHit hit, distance) && !_characterController.isGrounded)
         {
-            if (hit.collider.CompareTag("Wall") && hit.normal.y < 0.1f && _currentStamina > 0f && !_isStaminaDepleted)
+            if (hit.collider.CompareTag("Wall") && hit.normal.y < 0.1f && _currentStamina > _playerData.StaminaCost )
             {
                 _isClimbing = true;
+                Debug.Log("Climbing Wall");
                 return;
             }
         }
 
-        if (_wasClimbing && !_isClimbing)
-        {
-            _wallClimbCooldownTimer = _wallClimbCooldown;
-        }
-
-        if (_characterController.isGrounded)
-        {
-            _isStaminaDepleted = false;
-        }
 
         _isClimbing = false;
     }
@@ -149,27 +123,31 @@ public class PlayerMove : MonoBehaviour
         if (_characterController.isGrounded)
         {
             _jumpCount = JUMPCOUNT;
+            _yVelocity = 0f; // Resetting vertical velocity when grounded
+            Debug.Log("Grounded - Jump Count Reset");
         }
 
         if (Input.GetButtonDown("Jump") && _jumpCount > 0)
         {
-            _yVelocity = JumpPower;
+            _yVelocity = _playerData.JumpPower;
             _jumpCount--;
+            Debug.Log($"Jumping! Y-Velocity: {_yVelocity}");
         }
     }
+
 
     private Vector3 Rolling(Vector3 dir)
     {
         if (_pushTimer > 0f)
         {
-            dir += _pushDirection * _pushPower;
+            dir += _pushDirection * _playerData.PushPower;
             _pushTimer -= Time.deltaTime;
         }
 
-        if (Input.GetKeyDown(KeyCode.E) && _characterController.isGrounded && _currentStamina >= _rollStaminaCost)
+        if (Input.GetKeyDown(KeyCode.E) && _characterController.isGrounded && _currentStamina >= _playerData.RollStaminaCost)
         {
             AddPush(dir);
-            _currentStamina -= _rollStaminaCost;
+            _currentStamina -=  _playerData.RollStaminaCost;
             UI_Main.Instance.RefreshStamina(_currentStamina);
         }
 
@@ -195,28 +173,28 @@ public class PlayerMove : MonoBehaviour
             if (_currentStamina > 0f)
             {
                 _isRunning = true;
-                _moveSpeed = RunSpeed;
-                _currentStamina -= _staminaCost * Time.deltaTime;
+                _moveSpeed = _playerData.RunSpeed;
+                _currentStamina -= _playerData.StaminaCost * Time.deltaTime;
             }
             else
             {
                 _isRunning = false;
                 _canRun = false;
-                _moveSpeed = WalkSpeed;
+                _moveSpeed = _playerData.WalkSpeed;
             }
         }
         else
         {
             _isRunning = false;
-            _moveSpeed = WalkSpeed;
+            _moveSpeed = _playerData.WalkSpeed;
             if (!_isClimbing)
-                _currentStamina += _staminaRecovery * Time.deltaTime;
+                _currentStamina += _playerData.StaminaRecovery * Time.deltaTime;
         }
     }
 
     private void AddPush(Vector3 direction)
     {
         _pushDirection = direction.normalized;
-        _pushTimer = _pushDuration;
+        _pushTimer = _playerData.PushDuration;
     }
 }
