@@ -55,7 +55,7 @@ public class PlayerFire : MonoBehaviour
 
         // 2. 오른쪽 버튼 입력 받기
         // 0: 왼쪽, 1: 오른쪽, 2: 휠
-        if (Input.GetMouseButtonUp(1))
+        if (Input.GetMouseButtonUp(1) && _currentBombCount > 0)
         {
             // 3. 발사 위치에 수류탄 생성하기
             Bomb bomb = GameManager.Instance.PoolManager.GetFromPool<Bomb>();
