@@ -2969,6 +2969,9 @@ MonoBehaviour:
   MaxPower: 15
   ThrowPower: 0
   ThrowPowerPerDeltaTime: 4
+  maxSpread: 5
+  recoilPerShot: 0.5
+  spreadRecoverySpeed: 2
 --- !u!1 &1526551641
 GameObject:
   m_ObjectHideFlags: 0
@@ -3027,8 +3030,8 @@ MonoBehaviour:
   _crosshairDown: {fileID: 899700682}
   _crosshairLeft: {fileID: 286180252}
   _crosshairRight: {fileID: 539523912}
-  recoilStep: 28
-  recoverySpeed: 200
+  _recoilStep: 28
+  _recoverySpeed: 200
 --- !u!1 &1581924630
 GameObject:
   m_ObjectHideFlags: 0

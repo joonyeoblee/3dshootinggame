@@ -26,6 +26,13 @@ public class PlayerFire : MonoBehaviour
     private float _currentReloadGaugeValue;
     private Tween _reloadTween;
 
+    [SerializeField] private float maxSpread = 15f;
+    [SerializeField] private float recoilPerShot = 1f;
+    [SerializeField] private float spreadRecoverySpeed = 2f;
+
+    private float _currentSpread;
+    private float _verticalRecoilOffset;
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -84,8 +91,10 @@ public class PlayerFire : MonoBehaviour
             }
             crosshair.Recoil();
 
-            Ray ray = new Ray(FirePosition.transform.position, Camera.main.transform.forward);
-            Debug.DrawRay(FirePosition.transform.position, Camera.main.transform.forward * 100f, Color.red, 1f);
+            Vector3 dir = GetBulletDirection();
+
+            Ray ray = new Ray(FirePosition.transform.position, dir); // ✅ 퍼짐 반영된 방향으로 발사
+            Debug.DrawRay(FirePosition.transform.position, dir * 100f, Color.red, 1f);
 
             RaycastHit hitInfo;
             bool isHit = Physics.Raycast(ray, out hitInfo);
@@ -101,7 +110,15 @@ public class PlayerFire : MonoBehaviour
             _currentBulletCount--;
             UI_Main.Instance.RefreshBulletText($"{_currentBulletCount} / {_maxBulletCount}");
             _currentTime = _fireCooldown;
+
+            // 총 쏘는 블럭 안에
+            _currentSpread = Mathf.Min(_currentSpread + 0.5f, maxSpread);
+            Camera.main.GetComponent<CameraRotate>().AddRecoil(0.4f); // ✅ 카메라 위로 반동 추가
+
         }
+
+        _currentSpread = Mathf.MoveTowards(_currentSpread, 0f, spreadRecoverySpeed * Time.deltaTime);
+        _verticalRecoilOffset = Mathf.MoveTowards(_verticalRecoilOffset, 0f, spreadRecoverySpeed * Time.deltaTime);
 
         if (Input.GetKeyDown(KeyCode.R))
         {
@@ -131,5 +148,17 @@ public class PlayerFire : MonoBehaviour
         // Ray : 레이저(시작 위치, 방향)
         // RayCast : 레이저를 발사
         // RayCastHit : 레이저와 물체가 부딛혔다면 그 정보를 저장하는 구조체
+    }
+
+    private Vector3 GetBulletDirection()
+    {
+        Vector3 baseDir = Camera.main.transform.forward;
+
+        float horizontal = Random.Range(-_currentSpread, _currentSpread);
+        float vertical = Random.Range(-_currentSpread, _currentSpread) + _verticalRecoilOffset;
+
+        Quaternion spreadRot = Quaternion.Euler(-vertical, horizontal, 0f);
+
+        return spreadRot * baseDir;
     }
 }

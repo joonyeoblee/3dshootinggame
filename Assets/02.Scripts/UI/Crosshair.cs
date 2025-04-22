@@ -9,8 +9,8 @@ public class Crosshair : MonoBehaviour
     [SerializeField] private RectTransform _crosshairLeft;
     [SerializeField] private RectTransform _crosshairRight;
 
-    [SerializeField] private float recoilStep = 3f; // 총 쏠 때마다 증가량
-    [SerializeField] private float recoverySpeed = 25f; // 초당 회복 속도
+    [SerializeField] private float _recoilStep;
+    [SerializeField] private float _recoverySpeed;
 
     private float _spreadAmount;
 
@@ -25,7 +25,7 @@ public class Crosshair : MonoBehaviour
         // 조준선 회복
         if (_spreadAmount > _min)
         {
-            _spreadAmount -= recoverySpeed * Time.deltaTime;
+            _spreadAmount -= _recoverySpeed * Time.deltaTime;
             _spreadAmount = Mathf.Max(_spreadAmount, _min);
             ApplySpread();
         }
@@ -33,7 +33,7 @@ public class Crosshair : MonoBehaviour
 
     public void Recoil()
     {
-        _spreadAmount += recoilStep;
+        _spreadAmount += _recoilStep;
         _spreadAmount = Mathf.Min(_spreadAmount, _max);
         ApplySpread();
     }

@@ -1,33 +1,35 @@
-using System;
 using UnityEngine;
-
 public class CameraRotate : MonoBehaviour
 {
-    // 카메라 회전 스크립트
-    // 목표ㅣ 마우스를 조작하면 카메라를 그 방향으로 회전시키고 싶다.
-    // 구현순서
     public float RotationSpeed = 200f;
+    public float minY = -60f;
+    public float maxY = 60f;
 
-    public float minX = -60f; // 아래로 회전 제한
-    public float maxX = 60f;  // 위로 회전 제한
+    private float _yaw; // 좌우 회전
+    private float _pitch; // 상하 회전
 
-    float _xRotation = 0f; // 상하 회전값 누적 저장
-    float _yRotation = 0f;
+    private float _recoilOffset;
+    public float recoilRecoverySpeed = 20f;
 
     void Update()
     {
-        // 1. 마우스 입력을 받는다.
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
-        // Debug.Log($"Mouse X: {mouseX} Mouse Y: {mouseY}");
 
-        // 2. 회전한 양만큼 누적시켜 나간다.
-        _xRotation += mouseX * RotationSpeed * Time.deltaTime;
-        _yRotation += -mouseY * RotationSpeed * Time.deltaTime;
-        _yRotation = Mathf.Clamp(_yRotation, minX, maxX);
+        _yaw += mouseX * RotationSpeed * Time.deltaTime;
+        _pitch -= mouseY * RotationSpeed * Time.deltaTime;
 
-        // 3. 회전 방향으로 회전시킨다
-        transform.eulerAngles = new Vector3(_yRotation, _xRotation, 0f);
-        // transform.localRotation = Quaternion.Euler(-_yRotation, _xRotation, 0f);
+        // ✅ 실제 반동 적용
+        _pitch -= _recoilOffset;
+        _recoilOffset = Mathf.MoveTowards(_recoilOffset, 0f, recoilRecoverySpeed * Time.deltaTime);
+
+        _pitch = Mathf.Clamp(_pitch, minY, maxY);
+
+        transform.rotation = Quaternion.Euler(_pitch, _yaw, 0f);
+    }
+
+    public void AddRecoil(float amount)
+    {
+        _recoilOffset += amount;
     }
 }
