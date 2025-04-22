@@ -89,7 +89,7 @@ public class PlayerMove : MonoBehaviour
             if (_isClimbing)
                 _currentStamina -= _playerData.StaminaCost * Time.deltaTime;
         }
-        else if (!isFallingFromWall && _characterController.isGrounded)
+        else if (!isFallingFromWall && _characterController.isGrounded && _currentStamina < 1f)
         {
             _currentStamina += _playerData.StaminaRecovery * Time.deltaTime;
         }

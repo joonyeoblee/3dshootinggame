@@ -8,6 +8,7 @@ public class UI_Main : MonoBehaviour
     [SerializeField] private Slider _healthSlider;
     [SerializeField] private Slider _staminaSlider;
     [SerializeField] private Slider _bombGaugeSlider;
+    [SerializeField] private Slider _reloadSlider;
 
     [SerializeField] private TMP_Text _BulletText;
     [SerializeField] private TMP_Text _bombText;
@@ -37,6 +38,19 @@ public class UI_Main : MonoBehaviour
 
     public void RefreshBombText(string text)
     {
+        _bombText.text = text;
+    }
 
+    public void ActiveReloadSlider()
+    {
+        _reloadSlider.gameObject.SetActive(true);
+    }
+    public void DeactiveReloadSlider()
+    {
+        _reloadSlider.gameObject.SetActive(false);
+    }
+    public void RefreshReloadSlider(float value)
+    {
+        _reloadSlider.value = value;
     }
 }

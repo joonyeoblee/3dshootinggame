@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 public class PlayerFire : MonoBehaviour
 {
@@ -6,6 +7,7 @@ public class PlayerFire : MonoBehaviour
     // 필요 속성
     // -발사 위치
     public GameObject FirePosition;
+    [SerializeField] private Crosshair crosshair;
 
     // - 던지는 힘
     public float MaxPower = 15f;
@@ -15,18 +17,29 @@ public class PlayerFire : MonoBehaviour
     private readonly int _maxBulletCount = 50;
     private int _currentBulletCount;
 
+    private readonly int _maxBombCount = 3;
+    private int _currentBombCount;
+
     private readonly float _fireCooldown = 0.1f;
     private float _currentTime;
+
+    private float _currentReloadGaugeValue;
+    private Tween _reloadTween;
 
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+
         _currentBulletCount = _maxBulletCount;
+        UI_Main.Instance.RefreshBulletText($"{_currentBulletCount} / {_maxBulletCount}");
+
+        _currentBombCount = _maxBombCount;
+        UI_Main.Instance.RefreshBombText($"{_currentBombCount} / {_maxBombCount}");
     }
 
     private void Update()
     {
-        if (Input.GetMouseButton(1))
+        if (Input.GetMouseButton(1) && _currentBombCount > 0)
         {
             // 파워 모으기
             ThrowPower += Time.deltaTime * ThrowPowerPerDeltaTime;
@@ -47,8 +60,12 @@ public class PlayerFire : MonoBehaviour
             bombRigidbody.AddForce(Camera.main.transform.forward * ThrowPower, ForceMode.Impulse);
             bombRigidbody.AddTorque(Vector3.one);
 
+            _currentBombCount--;
+            UI_Main.Instance.RefreshBombText($"{_currentBombCount} / {_maxBombCount}");
+
             // 파워 다시 원위치
-            ThrowPower = 1f;
+            ThrowPower = 0f;
+            UI_Main.Instance.RefreshBombGaugeSlider(ThrowPower);
         }
         if (_currentTime > 0f)
         {
@@ -56,9 +73,16 @@ public class PlayerFire : MonoBehaviour
         }
 
         // 1. 왼쪽 버튼 입력 받기
-        if (Input.GetMouseButton(0) && _currentTime <= 0f)
+        if (Input.GetMouseButton(0) && _currentTime <= 0f && _currentBulletCount > 0)
         {
-            Debug.Log("좌클릭 감지됨");
+            if (_reloadTween != null && _reloadTween.IsActive())
+            {
+                _reloadTween.Kill();
+                UI_Main.Instance.DeactiveReloadSlider();
+                _currentReloadGaugeValue = 0f;
+                _reloadTween = null;
+            }
+            crosshair.Recoil();
 
             Ray ray = new Ray(FirePosition.transform.position, Camera.main.transform.forward);
             Debug.DrawRay(FirePosition.transform.position, Camera.main.transform.forward * 100f, Color.red, 1f);
@@ -75,12 +99,29 @@ public class PlayerFire : MonoBehaviour
 
             }
             _currentBulletCount--;
+            UI_Main.Instance.RefreshBulletText($"{_currentBulletCount} / {_maxBulletCount}");
             _currentTime = _fireCooldown;
         }
 
         if (Input.GetKeyDown(KeyCode.R))
         {
-            _currentBulletCount = _maxBulletCount;
+            if (_reloadTween != null && _reloadTween.IsActive())
+                return;
+            UI_Main.Instance.ActiveReloadSlider();
+            _reloadTween = DOTween.To(() => _currentReloadGaugeValue,
+                    x => _currentReloadGaugeValue = x,
+                    1f,
+                    2f)
+                .OnUpdate(() => { UI_Main.Instance.RefreshReloadSlider(_currentReloadGaugeValue); }).SetEase(Ease.Linear)
+                .OnComplete(() =>
+                {
+                    _currentBulletCount = _maxBulletCount;
+                    UI_Main.Instance.RefreshBulletText($"{_currentBulletCount} / {_maxBulletCount}");
+                    _reloadTween = null;
+                    _currentReloadGaugeValue = 0f;
+                    UI_Main.Instance.DeactiveReloadSlider();
+                });
+
         }
 
         // 2. 레이케스트를 생성하고 발사 위치와 진행 방향을 설정
