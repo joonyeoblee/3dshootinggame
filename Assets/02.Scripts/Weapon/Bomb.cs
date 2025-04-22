@@ -1,20 +1,35 @@
+using Redcode.Pools;
 using UnityEngine;
-public class Bomb : MonoBehaviour
+public class Bomb : MonoBehaviour, IPoolObject
 {
-    // 목표: 마우스의 오른쪽 버튼을 누르면 시선이 바라보는 방향으로 수류탄을 던지고 싶다.
-
-    // 1. 수류탄 오브젝트 만들기
-    // 2. 오른쪽 버튼 입력 만들기
-    // 3. 발사 위치에 수류탄 생성하기
-    // 4. 생성된 수류탄을 카메라 방향으로 물리적인 힘 가하기
-
-    // 충돌했을 때
     public GameObject ExplosionEffectPrefab;
+
+    public PoolItem PoolItem;
+    private void Start()
+    {
+        PoolItem = GetComponent<PoolItem>();
+    }
     private void OnCollisionEnter(Collision collision)
     {
-        GameObject effectobject = Instantiate(ExplosionEffectPrefab);
-        effectobject.transform.position = transform.position;
+        // 폭발 이펙트 생성
+        GameObject effectObject = Instantiate(ExplosionEffectPrefab, transform.position, Quaternion.identity);
 
-        Destroy(gameObject);
+        // 풀로 반환
+        PoolItem.ReturnToPoolAs<Bomb>();
     }
+
+    public void OnCreatedInPool()
+    {
+        // 최초 생성 시 호출 (선택적 초기화)
+    }
+
+    public void OnGettingFromPool()
+    {
+        // 풀에서 꺼내올 때 호출 (폭탄 리셋 작업 가능)
+        Rigidbody rb = GetComponent<Rigidbody>();
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+    }
+
+
 }
