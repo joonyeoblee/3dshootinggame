@@ -666,8 +666,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RotationSpeed: 200
-  minX: -60
-  maxX: 60
+  minY: -60
+  maxY: 60
+  recoilRecoverySpeed: 20
 --- !u!114 &330585549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -869,6 +870,7 @@ Transform:
   m_Children:
   - {fileID: 299349010}
   - {fileID: 1853850345}
+  - {fileID: 1183774431}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &539523911
@@ -2041,6 +2043,11 @@ MonoBehaviour:
     _count: 0
     _container: {fileID: 1853850345}
     _nonLazy: 1
+  - _name: Bullet
+    _component: {fileID: -3115672915224471826, guid: 64c7c83a94035db4ca5cb5326454b8a5, type: 3}
+    _count: 0
+    _container: {fileID: 1183774431}
+    _nonLazy: 1
 --- !u!1 &894707594
 GameObject:
   m_ObjectHideFlags: 0
@@ -2511,6 +2518,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1126036299}
   m_CullTransparentMesh: 1
+--- !u!1 &1183774430
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1183774431}
+  m_Layer: 0
+  m_Name: Bullet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1183774431
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1183774430}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 527005329}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1248417136
 GameObject:
   m_ObjectHideFlags: 0
@@ -2966,6 +3004,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FirePosition: {fileID: 319213559}
   crosshair: {fileID: 1526551643}
+  _bulletPrefab: {fileID: 3163126826636465162, guid: 64c7c83a94035db4ca5cb5326454b8a5, type: 3}
   MaxPower: 15
   ThrowPower: 0
   ThrowPowerPerDeltaTime: 4
@@ -3030,7 +3069,7 @@ MonoBehaviour:
   _crosshairDown: {fileID: 899700682}
   _crosshairLeft: {fileID: 286180252}
   _crosshairRight: {fileID: 539523912}
-  _recoilStep: 28
+  _recoilStep: 30
   _recoverySpeed: 200
 --- !u!1 &1581924630
 GameObject:

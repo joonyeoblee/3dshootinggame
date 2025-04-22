@@ -18,8 +18,7 @@ public class CameraRotate : MonoBehaviour
 
         _yaw += mouseX * RotationSpeed * Time.deltaTime;
         _pitch -= mouseY * RotationSpeed * Time.deltaTime;
-
-        // ✅ 실제 반동 적용
+        
         _pitch -= _recoilOffset;
         _recoilOffset = Mathf.MoveTowards(_recoilOffset, 0f, recoilRecoverySpeed * Time.deltaTime);
 

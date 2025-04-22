@@ -8,7 +8,7 @@ public class PlayerFire : MonoBehaviour
     // -발사 위치
     public GameObject FirePosition;
     [SerializeField] private Crosshair crosshair;
-
+    [SerializeField] private GameObject _bulletPrefab;
     // - 던지는 힘
     public float MaxPower = 15f;
     public float ThrowPower;
@@ -104,7 +104,7 @@ public class PlayerFire : MonoBehaviour
 
             Vector3 dir = GetBulletDirection();
 
-            Ray ray = new Ray(FirePosition.transform.position, dir); // ✅ 퍼짐 반영된 방향으로 발사
+            Ray ray = new Ray(FirePosition.transform.position, dir);
             Debug.DrawRay(FirePosition.transform.position, dir * 100f, Color.red, 1f);
 
             RaycastHit hitInfo;
@@ -124,7 +124,7 @@ public class PlayerFire : MonoBehaviour
 
             // 총 쏘는 블럭 안에
             _currentSpread = Mathf.Min(_currentSpread + 0.5f, maxSpread);
-            Camera.main.GetComponent<CameraRotate>().AddRecoil(0.4f); // ✅ 카메라 위로 반동 추가
+            Camera.main.GetComponent<CameraRotate>().AddRecoil(0.4f);
 
         }
     }
