@@ -1,5 +1,4 @@
 using UnityEngine;
-
 [CreateAssetMenu(fileName = "PlayerSO", menuName = "ScriptableObjects/PlayerSO")]
 public class PlayerSO : ScriptableObject
 {
@@ -9,9 +8,9 @@ public class PlayerSO : ScriptableObject
     public float JumpPower = 5f;
 
     [Header("스태미너")]
-    public float StaminaCost = 0.05f;
-    public float StaminaRecovery = 0.4f;
-    public float RollStaminaCost = 0.3f;
+    public float StaminaCost = 1f;
+    public float StaminaRecovery = 2f;
+    public float RollStaminaCost = 3f;
 
     [Header("구르기")]
     public float PushPower = 10f;

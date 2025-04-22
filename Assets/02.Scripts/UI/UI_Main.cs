@@ -1,19 +1,23 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
-
 public class UI_Main : MonoBehaviour
 {
     public static UI_Main Instance;
 
-    [SerializeField] Slider _stamina;
+    [SerializeField] private Slider _healthSlider;
+    [SerializeField] private Slider _staminaSlider;
 
     void Awake()
     {
         Instance = this;
     }
-    public void RefreshStamina(float value)
+
+    public void RefreshHealthSlider(float value)
     {
-        _stamina.value = value;
+        _healthSlider.value = value;
+    }
+    public void RefreshStaminaSlider(float value)
+    {
+        _staminaSlider.value = value;
     }
 }

@@ -1,41 +1,41 @@
-using System;
-using Unity.VisualScripting;
 using UnityEngine;
-
 public class PlayerMove : MonoBehaviour
 {
     private const float GRAVITY = -9.81f;
     private const int JUMPCOUNT = 2;
 
-    CharacterController _characterController;
-
     [SerializeField] private PlayerSO _playerData;
+    [SerializeField] private float _currentStamina = 10f;
 
-    [SerializeField] private float _currentStamina = 1f;
-
+    private CharacterController _characterController;
     private Vector3 _velocity;
     private float _yVelocity;
+    private float _moveSpeed;
 
     private bool _wantsToRun;
     private bool _canRun = true;
     private bool _isRunning;
-    [SerializeField] private Vector3 _pushDirection = Vector3.zero;
-
-    private bool _isClimbing;
-    private bool _wasClimbing;
-    private float _moveSpeed;
-    private float _pushTimer = 0f;
 
     private int _jumpCount = JUMPCOUNT;
 
-    private void Awake()
+    private Vector3 _pushDirection;
+    private float _pushTimer;
+
+    private bool _isClimbing;
+    private bool _wasClimbing;
+    private bool _isTouchingWall;
+
+
+    private void Start()
     {
         _characterController = GetComponent<CharacterController>();
-        UI_Main.Instance.RefreshStamina(_currentStamina);
+        UI_Main.Instance.RefreshStaminaSlider(_currentStamina);
     }
 
     private void Update()
     {
+        _isTouchingWall = false;
+
         HandleMovement();
 
         HandleStamina();
@@ -52,7 +52,7 @@ public class PlayerMove : MonoBehaviour
         dir = Camera.main.transform.TransformDirection(dir);
 
         _currentStamina = Mathf.Clamp(_currentStamina, 0f, 1f);
-        UI_Main.Instance.RefreshStamina(_currentStamina);
+        UI_Main.Instance.RefreshStaminaSlider(_currentStamina);
 
         Jumping();
 
@@ -95,27 +95,33 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        // 거의 수직인 벽에 닿았는지 판단
+        if (hit.collider.CompareTag("Wall") && hit.normal.y < 0.1f)
+        {
+            _isTouchingWall = true;
+        }
+    }
+
     private void HandleWallClimb()
     {
 
-        Vector3 origin = transform.position + Vector3.up;
-        Vector3 direction = transform.forward;
-        float distance = 1f;
-
-        Debug.DrawRay(origin, direction * distance, Color.red);
-
-        if (Physics.Raycast(origin, direction, out RaycastHit hit, distance) && !_characterController.isGrounded)
+        if (_isTouchingWall && !_characterController.isGrounded && _currentStamina > _playerData.StaminaCost)
         {
-            if (hit.collider.CompareTag("Wall") && hit.normal.y < 0.1f && _currentStamina > _playerData.StaminaCost )
+            if (!_isClimbing)
             {
                 _isClimbing = true;
-                Debug.Log("Climbing Wall");
-                return;
             }
         }
-
-
-        _isClimbing = false;
+        else
+        {
+            if (_isClimbing)
+            {
+                _isClimbing = false;
+            }
+        }
     }
 
     private void Jumping()
@@ -123,15 +129,13 @@ public class PlayerMove : MonoBehaviour
         if (_characterController.isGrounded)
         {
             _jumpCount = JUMPCOUNT;
-            _yVelocity = 0f; // Resetting vertical velocity when grounded
-            Debug.Log("Grounded - Jump Count Reset");
+            _yVelocity = 0f;
         }
 
         if (Input.GetButtonDown("Jump") && _jumpCount > 0)
         {
             _yVelocity = _playerData.JumpPower;
             _jumpCount--;
-            Debug.Log($"Jumping! Y-Velocity: {_yVelocity}");
         }
     }
 
@@ -148,7 +152,7 @@ public class PlayerMove : MonoBehaviour
         {
             AddPush(dir);
             _currentStamina -=  _playerData.RollStaminaCost;
-            UI_Main.Instance.RefreshStamina(_currentStamina);
+            UI_Main.Instance.RefreshStaminaSlider(_currentStamina);
         }
 
         return dir;
