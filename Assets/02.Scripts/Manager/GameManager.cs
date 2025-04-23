@@ -1,12 +1,6 @@
 using Redcode.Pools;
-using UnityEngine;
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
-    public static GameManager Instance;
     public PoolManager PoolManager;
-
-    private void Awake()
-    {
-        Instance = this;
-    }
+    
 }

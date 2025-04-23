@@ -24,6 +24,7 @@ public class Enemy : MonoBehaviour
     private const float GRAVITY = -9.81f;
 
     public float FindDistance = 7f; // 탐색 범위
+    public float ReturnDistance = 10f;
     public float AttackDistance = 2f; // 공격 범위
     public float MoveSpeed = 3.3f;
 
@@ -137,7 +138,7 @@ public class Enemy : MonoBehaviour
     private void Trace()
     {
         // 전이 : 플레이어와 멀어지면 -> Return
-        if (Vector3.Distance(transform.position, _player.transform.position) >= FindDistance)
+        if (Vector3.Distance(transform.position, _player.transform.position) >= FindDistance || Vector3.Distance(transform.position, _startPosition) >= ReturnDistance)
         {
             Debug.Log($"{CurrentState} -> Return");
             CurrentState = EnemyState.Return;

@@ -1,10 +1,8 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-public class UI_Main : MonoBehaviour
+public class UI_Main : Singleton<UI_Main>
 {
-    public static UI_Main Instance;
-
     [SerializeField] private Slider _healthSlider;
     [SerializeField] private Slider _staminaSlider;
     [SerializeField] private Slider _bombGaugeSlider;
@@ -12,11 +10,6 @@ public class UI_Main : MonoBehaviour
 
     [SerializeField] private TMP_Text _BulletText;
     [SerializeField] private TMP_Text _bombText;
-
-    void Awake()
-    {
-        Instance = this;
-    }
 
     public void RefreshHealthSlider(float value)
     {
