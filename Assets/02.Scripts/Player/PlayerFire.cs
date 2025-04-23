@@ -134,6 +134,15 @@ public class PlayerFire : PlayerBase
                     bullet.PoolItem.ReturnToPoolAs<Bullet>();
                     bullet.gameObject.SetActive(false);
 
+                    if (hitInfo.collider.gameObject.CompareTag("Enemy"))
+                    {
+                        Debug.Log(hitInfo.collider.gameObject.name);
+                        Enemy enemy = hitInfo.collider.GetComponent<Enemy>();
+
+                        Damage damage = new Damage(10, 30, gameObject);
+                        enemy.TakeDamage(damage);
+                    }
+
                 });
             }
             _currentBulletCount--;
