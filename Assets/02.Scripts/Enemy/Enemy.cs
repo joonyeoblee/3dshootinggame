@@ -16,13 +16,15 @@ public class Enemy : MonoBehaviour
     public EnemyState CurrentState = EnemyState.Idle;
 
     [SerializeField] private GameObject _player;
-    public float FindDistance = 7f; // 탐색 범위
-    public float AttackDistance = 2f; // 공격 범위
+    private CharacterController _characterController;
     private Vector3 _startPosition;
 
-    private CharacterController _characterController;
+    public float FindDistance = 7f; // 탐색 범위
+    public float AttackDistance = 2f; // 공격 범위
     public float MoveSpeed = 3.3f;
 
+    public float AttackCoolTime = 2f;
+    private float _attackTimer;
     private void Start()
     {
         _startPosition = transform.position;
@@ -133,7 +135,21 @@ public class Enemy : MonoBehaviour
 
     private void Attack()
     {
-        // 공격한다
+        // 전이 : 공격 범위 만큼 가까워 지면 -> Attack
+        if (Vector3.Distance(transform.position, _player.transform.position) > AttackDistance)
+        {
+            Debug.Log("Attack -> Trace");
+            CurrentState = EnemyState.Trace;
+            return;
+        }
+
+        _attackTimer += Time.deltaTime;
+
+        if (_attackTimer > AttackCoolTime)
+        { // 공격한다
+            Debug.Log("플레이어 공격!");
+            _attackTimer = 0f;
+        }
     }
 
     private void Damaged()
