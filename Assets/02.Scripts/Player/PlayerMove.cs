@@ -1,10 +1,10 @@
 using UnityEngine;
-public class PlayerMove : MonoBehaviour
+public class PlayerMove : PlayerBase
 {
     private const float GRAVITY = -9.81f;
     private const int JUMPCOUNT = 2;
 
-    [SerializeField] private PlayerSO _playerData;
+    private PlayerSO _playerData;
     [SerializeField] private float _currentStamina = 10f;
 
     private CharacterController _characterController;
@@ -26,8 +26,10 @@ public class PlayerMove : MonoBehaviour
     private bool _isTouchingWall;
 
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
+        _playerData = _player.PlayerData;
         _characterController = GetComponent<CharacterController>();
         UI_Main.Instance.RefreshStaminaSlider(_currentStamina);
     }

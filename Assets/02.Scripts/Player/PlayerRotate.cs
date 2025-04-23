@@ -1,6 +1,5 @@
 using UnityEngine;
-
-public class PlayerRotate : MonoBehaviour
+public class PlayerRotate : PlayerBase
 {
     public float RotationSpeed = 200f;
 

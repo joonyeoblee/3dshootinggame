@@ -1,6 +1,8 @@
 using UnityEngine;
 public class CameraRotate : MonoBehaviour
 {
+    public GameObject Pivot;
+
     public float RotationSpeed = 200f;
     public float minY = -60f;
     public float maxY = 60f;
@@ -10,6 +12,10 @@ public class CameraRotate : MonoBehaviour
 
     private float _recoilOffset;
     public float recoilRecoverySpeed = 20f;
+
+    public GameObject TopView;
+
+    public CameraFollow Follow;
 
     void Update()
     {
@@ -24,7 +30,15 @@ public class CameraRotate : MonoBehaviour
 
         _pitch = Mathf.Clamp(_pitch, minY, maxY);
 
-        transform.rotation = Quaternion.Euler(_pitch, _yaw, 0f);
+        if (Follow.TOPMode)
+        {
+            // TopView.transform.rotation = Quaternion.Euler(_pitch, _yaw, 0f);
+        }
+        else
+        {
+            Pivot.transform.rotation = Quaternion.Euler(_pitch, _yaw, 0f);
+        }
+
     }
 
     public void AddRecoil(float amount)
