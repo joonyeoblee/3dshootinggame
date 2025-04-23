@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 public class Enemy : MonoBehaviour
 {
@@ -39,11 +40,17 @@ public class Enemy : MonoBehaviour
     public float RandomRange = 7f;
     private float _idleTimer;
     private readonly float _idleDuration = 2f;
+
     private bool _isPatrolling; // 중복 방지
+
+    private readonly List<Vector3> _patrolPoints = new List<Vector3>();
+    private int _patrolIndex;
 
     private void Start()
     {
         _startPosition = transform.position;
+        GeneratePatrolPoints();
+
         _characterController = GetComponent<CharacterController>();
         _player = GameObject.FindGameObjectWithTag("Player");
     }
@@ -220,52 +227,38 @@ public class Enemy : MonoBehaviour
 
     private void Patrol()
     {
-        if (!_isPatrolling)
+        if (Vector3.Distance(transform.position, _player.transform.position) <= FindDistance)
         {
-            _isPatrolling = true;
-            StartCoroutine(Patrol_Coroutine());
+            Debug.Log("상태전환: Patrol -> Trace");
+            CurrentState = EnemyState.Trace;
+            return;
         }
 
-    }
+        Vector3 target = _patrolPoints[_patrolIndex];
+        Vector3 direction = (target - transform.position).normalized;
 
-    private IEnumerator Patrol_Coroutine()
-    {
-        Vector3[] points = { GetRandomPatrolPoint(), GetRandomPatrolPoint(), _startPosition };
+        _characterController.Move(direction * MoveSpeed * Time.deltaTime);
 
-        foreach (Vector3 point in points)
+        if (Vector3.Distance(transform.position, target) <= 0.1f)
         {
-            if (Vector3.Distance(transform.position, _player.transform.position) <= FindDistance)
+            _patrolIndex++;
+            if (_patrolIndex >= _patrolPoints.Count)
             {
-                Debug.Log($"{CurrentState} -> Trace (도중)");
-                CurrentState = EnemyState.Trace;
-                _isPatrolling = false;
-                yield break;
+                _patrolIndex = 0;
+                GeneratePatrolPoints(); // 순찰 끝났으니 다시 생성
+                Debug.Log("상태전환: Patrol -> Idle");
+                CurrentState = EnemyState.Idle;
             }
-
-            yield return StartCoroutine(PointMove_Coroutine(point));
         }
-
-        Debug.Log($"{CurrentState} -> Idle");
-        CurrentState = EnemyState.Idle;
-        _isPatrolling = false;
     }
-
-    private IEnumerator PointMove_Coroutine(Vector3 target)
+    private void GeneratePatrolPoints()
     {
-        while (Vector3.Distance(transform.position, target) > 0.1f)
+        _patrolPoints.Clear();
+        for (int i = 0; i < 2; i++)
         {
-            if (Vector3.Distance(transform.position, _player.transform.position) <= FindDistance)
-            {
-                Debug.Log($"{CurrentState} -> Trace (이동 중)");
-                CurrentState = EnemyState.Trace;
-                _isPatrolling = false;
-                yield break;
-            }
-
-            Vector3 dir = (target - transform.position).normalized;
-            _characterController.Move(dir * MoveSpeed * Time.deltaTime);
-            yield return null;
+            _patrolPoints.Add(GetRandomPatrolPoint());
         }
+        _patrolPoints.Add(_startPosition); // 마지막은 시작 위치
     }
 
     private Vector3 GetRandomPatrolPoint()
