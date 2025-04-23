@@ -41,8 +41,6 @@ public class Enemy : MonoBehaviour
     private float _idleTimer;
     private readonly float _idleDuration = 2f;
 
-    private bool _isPatrolling; // 중복 방지
-
     private readonly List<Vector3> _patrolPoints = new List<Vector3>();
     private int _patrolIndex;
 
@@ -229,7 +227,7 @@ public class Enemy : MonoBehaviour
     {
         if (Vector3.Distance(transform.position, _player.transform.position) <= FindDistance)
         {
-            Debug.Log("상태전환: Patrol -> Trace");
+            Debug.Log($"{CurrentState} -> Trace");
             CurrentState = EnemyState.Trace;
             return;
         }
@@ -246,7 +244,7 @@ public class Enemy : MonoBehaviour
             {
                 _patrolIndex = 0;
                 GeneratePatrolPoints(); // 순찰 끝났으니 다시 생성
-                Debug.Log("상태전환: Patrol -> Idle");
+                Debug.Log($"{CurrentState} -> Idle");
                 CurrentState = EnemyState.Idle;
             }
         }
