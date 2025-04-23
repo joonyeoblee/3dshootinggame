@@ -8,7 +8,8 @@ public class PlayerFire : MonoBehaviour
     // -발사 위치
     public GameObject FirePosition;
     [SerializeField] private Crosshair crosshair;
-    [SerializeField] private GameObject _bulletPrefab;
+
+    [SerializeField] private GameObject _muzzle;
     // - 던지는 힘
     public float MaxPower = 15f;
     public float ThrowPower;
@@ -46,6 +47,11 @@ public class PlayerFire : MonoBehaviour
 
     private void Update()
     {
+        if (_currentTime > 0f)
+        {
+            _currentTime -= Time.deltaTime;
+        }
+
         Bomb();
 
         Fire();
@@ -89,7 +95,6 @@ public class PlayerFire : MonoBehaviour
     }
     private void Fire()
     {
-
         // 1. 왼쪽 버튼 입력 받기
         if (Input.GetMouseButton(0) && _currentTime <= 0f && _currentBulletCount > 0)
         {
@@ -100,6 +105,8 @@ public class PlayerFire : MonoBehaviour
                 _currentReloadGaugeValue = 0f;
                 _reloadTween = null;
             }
+
+            // 조준선 퍼지기
             crosshair.Recoil();
 
             Vector3 dir = GetBulletDirection();
@@ -112,11 +119,20 @@ public class PlayerFire : MonoBehaviour
             if (isHit)
             {
                 BulletEffect bulletEffect = GameManager.Instance.PoolManager.GetFromPool<BulletEffect>();
+                Bullet bullet = GameManager.Instance.PoolManager.GetFromPool<Bullet>();
 
-                bulletEffect.transform.position = hitInfo.point;
-                bulletEffect.transform.forward = hitInfo.normal;
-                bulletEffect.GetComponent<ParticleSystem>().Play();
+                bullet.transform.position = FirePosition.transform.position;
 
+                bullet.gameObject.transform.DOMove(hitInfo.point, 0.1f).SetEase(Ease.Linear).OnComplete(() =>
+                {
+                    bulletEffect.transform.position = hitInfo.point;
+                    bulletEffect.transform.forward = hitInfo.normal;
+                    bulletEffect.GetComponent<ParticleSystem>().Play();
+
+                    bullet.PoolItem.ReturnToPoolAs<Bullet>();
+                    bullet.gameObject.SetActive(false);
+
+                });
             }
             _currentBulletCount--;
             UI_Main.Instance.RefreshBulletText($"{_currentBulletCount} / {_maxBulletCount}");
@@ -159,10 +175,7 @@ public class PlayerFire : MonoBehaviour
             ThrowPower = 0f;
             UI_Main.Instance.RefreshBombGaugeSlider(ThrowPower);
         }
-        if (_currentTime > 0f)
-        {
-            _currentTime -= Time.deltaTime;
-        }
+
     }
 
     private Vector3 GetBulletDirection()

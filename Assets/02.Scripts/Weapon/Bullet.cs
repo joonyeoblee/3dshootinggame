@@ -8,8 +8,9 @@ public class Bullet : MonoBehaviour
         PoolItem = GetComponent<PoolItem>();
     }
 
-    private void OnDisable()
-    {
-        PoolItem.ReturnToPoolAs<BulletEffect>();
-    }
+    // private void OnCollisionEnter(Collision other)
+    // {
+    //     Debug.Log(other.gameObject.name);
+    //     PoolItem.ReturnToPoolAs<Bullet>();
+    // }
 }

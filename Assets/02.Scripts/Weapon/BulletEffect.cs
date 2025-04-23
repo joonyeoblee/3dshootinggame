@@ -8,7 +8,6 @@ public class BulletEffect : MonoBehaviour
         PoolItem = GetComponent<PoolItem>();
     }
 
-
     private void OnDisable()
     {
         PoolItem.ReturnToPoolAs<BulletEffect>();

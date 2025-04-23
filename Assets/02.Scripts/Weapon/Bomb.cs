@@ -16,6 +16,7 @@ public class Bomb : MonoBehaviour, IPoolObject
 
         // 풀로 반환
         PoolItem.ReturnToPoolAs<Bomb>();
+
     }
 
     public void OnCreatedInPool()
