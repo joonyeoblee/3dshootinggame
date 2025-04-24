@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 public class Enemy : MonoBehaviour
 {
     // 1, 상태를 열거형으로 정의한다
@@ -19,7 +20,8 @@ public class Enemy : MonoBehaviour
     public EnemyState CurrentState = EnemyState.Idle;
 
     [SerializeField] private GameObject _player;
-    private CharacterController _characterController;
+    // private CharacterController _characterController;
+    private NavMeshAgent _agent;
     private Vector3 _startPosition;
 
     private const float GRAVITY = -9.81f;
@@ -49,8 +51,12 @@ public class Enemy : MonoBehaviour
         _startPosition = transform.position;
         GeneratePatrolPoints();
 
-        _characterController = GetComponent<CharacterController>();
+        // _characterController = GetComponent<CharacterController>();
         _player = GameObject.FindGameObjectWithTag("Player");
+
+        // 에이전트 사용으로 변경
+        _agent = GetComponent<NavMeshAgent>();
+        _agent.speed = MoveSpeed;
     }
 
     private void Update()
@@ -59,7 +65,8 @@ public class Enemy : MonoBehaviour
 
         dir.y = GRAVITY * Time.deltaTime;
 
-        _characterController.Move(dir * Time.deltaTime);
+        // _characterController.Move(dir * Time.deltaTime);
+
         // 나의 현재 상태에 따라 상태 함수를 호출한다.
         switch (CurrentState)
         {
@@ -159,8 +166,9 @@ public class Enemy : MonoBehaviour
         }
 
         // 쫓아간다
-        Vector3 diraction = (_player.transform.position - transform.position).normalized;
-        _characterController.Move(diraction * MoveSpeed * Time.deltaTime);
+        // Vector3 diraction = (_player.transform.position - transform.position).normalized;
+        // _characterController.Move(diraction * MoveSpeed * Time.deltaTime);
+        _agent.SetDestination(_player.transform.position);
     }
 
     private void Return()
@@ -184,8 +192,10 @@ public class Enemy : MonoBehaviour
 
         // 시작 위치와되돌아간다
         Vector3 diraction = (_startPosition - transform.position).normalized;
-        _characterController.Move(diraction * MoveSpeed * Time.deltaTime);
+        // _characterController.Move(diraction * MoveSpeed * Time.deltaTime);
+        _agent.SetDestination(_startPosition);
     }
+
 
     private void Attack()
     {
@@ -209,8 +219,13 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator Damaged_Coroutine(int WeaponPower)
     {
-        Vector3 diraction = (transform.position - _player.transform.position).normalized;
-        _characterController.Move(diraction * MoveSpeed * WeaponPower * Time.deltaTime);
+        // Vector3 diraction = (transform.position - _player.transform.position).normalized;
+        // _characterController.Move(diraction * MoveSpeed * WeaponPower * Time.deltaTime);
+        // _agent.speed = MoveSpeed * WeaponPower;
+        // _agent.SetDestination(diraction);
+        // _agent.speed = MoveSpeed;
+        _agent.isStopped = true;
+        _agent.ResetPath();
         yield return new WaitForSeconds(DamagedTime);
 
         Debug.Log($"{CurrentState} -> Trace");
@@ -233,11 +248,10 @@ public class Enemy : MonoBehaviour
         }
 
         Vector3 target = _patrolPoints[_patrolIndex];
-        Vector3 direction = (target - transform.position).normalized;
 
-        _characterController.Move(direction * MoveSpeed * Time.deltaTime);
-
-        if (Vector3.Distance(transform.position, target) <= 0.1f)
+        // _characterController.Move(direction * MoveSpeed * Time.deltaTime);
+        _agent.SetDestination(target);
+        if (_agent.remainingDistance <= 0.1f)
         {
             _patrolIndex++;
             if (_patrolIndex >= _patrolPoints.Count)

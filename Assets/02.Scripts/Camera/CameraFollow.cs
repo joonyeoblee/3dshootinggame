@@ -45,7 +45,7 @@ public class CameraFollow : MonoBehaviour
         {
             // interpoling, smoothing 기법
             transform.position = FPSCamera.position;
-            transform.rotation = _povotTransform.rotation;
+            // transform.rotation = _povotTransform.rotation;
         }
         else if (TOPMode)
         {

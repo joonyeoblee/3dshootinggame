@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +12,11 @@ public class UI_Main : Singleton<UI_Main>
     [SerializeField] private TMP_Text _BulletText;
     [SerializeField] private TMP_Text _bombText;
 
+    public Crosshair Crosshair;
+
+    public Image HitImage;
+
+    public Action OnHit;
     public void RefreshHealthSlider(float value)
     {
         _healthSlider.value = value;

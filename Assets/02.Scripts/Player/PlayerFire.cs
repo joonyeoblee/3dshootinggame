@@ -7,7 +7,7 @@ public class PlayerFire : PlayerBase
     // 필요 속성
     // -발사 위치
     public GameObject FirePosition;
-    [SerializeField] private Crosshair crosshair;
+    // [SerializeField] private Crosshair crosshair;
 
     [SerializeField] private GameObject _muzzle;
     // - 던지는 힘
@@ -37,9 +37,6 @@ public class PlayerFire : PlayerBase
     protected override void Start()
     {
         base.Start();
-
-        Cursor.lockState = CursorLockMode.Locked;
-
         _currentBulletCount = _maxBulletCount;
         UI_Main.Instance.RefreshBulletText($"{_currentBulletCount} / {_maxBulletCount}");
 
@@ -109,12 +106,12 @@ public class PlayerFire : PlayerBase
             }
 
             // 조준선 퍼지기
-            crosshair.Recoil();
+            UI_Main.Instance.Crosshair.Recoil();
 
             Vector3 dir = GetBulletDirection();
 
-            Ray ray = new Ray(FirePosition.transform.position, dir);
-            Debug.DrawRay(FirePosition.transform.position, dir * 100f, Color.red, 1f);
+            Ray ray = new Ray(Camera.main.transform.position, dir);
+            Debug.DrawRay(Camera.main.transform.position, dir * 100f, Color.red, 1f);
 
             RaycastHit hitInfo;
             bool isHit = Physics.Raycast(ray, out hitInfo);

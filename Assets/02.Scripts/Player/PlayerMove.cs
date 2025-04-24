@@ -1,6 +1,9 @@
 using UnityEngine;
 public class PlayerMove : PlayerBase
 {
+    private static readonly int Run = Animator.StringToHash("Run");
+    private static readonly int Speed = Animator.StringToHash("Speed");
+
     private const float GRAVITY = -9.81f;
     private const int JUMPCOUNT = 2;
 
@@ -25,6 +28,10 @@ public class PlayerMove : PlayerBase
     private bool _wasClimbing;
     private bool _isTouchingWall;
 
+    public GameObject FPSCameraPosition;
+    private Transform _cameraTransform;
+    private Vector3 _cameraOriginalLocalPos;
+    private bool _isCameraShifted;
 
     protected override void Start()
     {
@@ -32,6 +39,8 @@ public class PlayerMove : PlayerBase
         _playerData = _player.PlayerData;
         _characterController = GetComponent<CharacterController>();
         UI_Main.Instance.RefreshStaminaSlider(_currentStamina);
+        _cameraTransform = FPSCameraPosition.transform;
+        _cameraOriginalLocalPos = FPSCameraPosition.transform.localPosition;
     }
 
     private void Update()
@@ -136,6 +145,8 @@ public class PlayerMove : PlayerBase
 
         if (Input.GetButtonDown("Jump") && _jumpCount > 0)
         {
+            // 조준선 퍼지기
+            UI_Main.Instance.Crosshair.Recoil();
             _yVelocity = _playerData.JumpPower;
             _jumpCount--;
         }
@@ -162,6 +173,9 @@ public class PlayerMove : PlayerBase
 
     private void Running()
     {
+        Vector3 moveInput = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        float inputMagnitude = moveInput.magnitude;
+
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             _wantsToRun = true;
@@ -174,29 +188,58 @@ public class PlayerMove : PlayerBase
             _wantsToRun = false;
         }
 
-        if (_wantsToRun && _canRun)
+        if (_wantsToRun && _canRun && _characterController.isGrounded && inputMagnitude > 0.1f)
         {
             if (_currentStamina > 0f)
             {
                 _isRunning = true;
                 _moveSpeed = _playerData.RunSpeed;
                 _currentStamina -= _playerData.StaminaCost * Time.deltaTime;
+                _player.Animator.SetFloat(Speed, 1.0f);
+
+                if (!_isCameraShifted)
+                {
+                    FPSCameraPosition.transform.localPosition = _cameraOriginalLocalPos + new Vector3(0, 0, 0.3f);
+                    _isCameraShifted = true;
+                }
             }
             else
             {
                 _isRunning = false;
                 _canRun = false;
                 _moveSpeed = _playerData.WalkSpeed;
+                _player.Animator.SetFloat(Speed, 0.5f);
+            }
+        }
+        else if (inputMagnitude > 0.1f)
+        {
+            _isRunning = false;
+            _moveSpeed = _playerData.WalkSpeed;
+            _player.Animator.SetFloat(Speed, 0.5f);
+
+            if (_isCameraShifted)
+            {
+                FPSCameraPosition.transform.localPosition = _cameraOriginalLocalPos;
+                _isCameraShifted = false;
             }
         }
         else
         {
             _isRunning = false;
-            _moveSpeed = _playerData.WalkSpeed;
+            _moveSpeed = 0f;
+            _player.Animator.SetFloat(Speed, 0f);
+
+            if (_isCameraShifted)
+            {
+                FPSCameraPosition.transform.localPosition = _cameraOriginalLocalPos;
+                _isCameraShifted = false;
+            }
+
             if (!_isClimbing)
                 _currentStamina += _playerData.StaminaRecovery * Time.deltaTime;
         }
     }
+
 
     private void AddPush(Vector3 direction)
     {

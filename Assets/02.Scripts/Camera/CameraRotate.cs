@@ -34,9 +34,13 @@ public class CameraRotate : MonoBehaviour
         {
             // TopView.transform.rotation = Quaternion.Euler(_pitch, _yaw, 0f);
         }
+        else if (Follow.FPSMode)
+        {
+            transform.rotation = Quaternion.Euler(_pitch, _yaw, 0f);
+        }
         else
         {
-            Pivot.transform.rotation = Quaternion.Euler(_pitch, _yaw, 0f);
+            Pivot.transform.rotation = Quaternion.Euler(0f, _pitch, 0f);
         }
 
     }
