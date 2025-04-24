@@ -26,9 +26,6 @@ public class Enemy : MonoBehaviour, IDamageable
     public EnemyStatsSO EnemyStats;
     public EnemyType EnemyType;
 
-    // 2. 현재 상태를 지정한다
-    public EnemyState CurrentState = EnemyState.Idle;
-
     public GameObject Player { get; private set; }
     // private CharacterController _characterController;
     public NavMeshAgent NavAgent { get; private set; }
@@ -105,7 +102,6 @@ public class Enemy : MonoBehaviour, IDamageable
         NavAgent = GetComponent<NavMeshAgent>();
         NavAgent.speed = Stat.MoveSpeed;
 
-
     }
 
     private void OnEnable()
@@ -133,23 +129,20 @@ public class Enemy : MonoBehaviour, IDamageable
 
     public void TakeDamage(Damage damage)
     {
-        if (CurrentState == EnemyState.Damaged || CurrentState == EnemyState.Die)
+        Debug.Log($"{name} From{damage.DamageFrom} Take {damage.Value} remain {Health}");
+        if (StateMachine.CurrentState.GetType() == typeof(DieState))
         {
             return;
         }
+
         Health -= damage.Value;
 
         if (Health <= 0)
         {
-            Debug.Log($"{CurrentState} -> Die");
-            CurrentState = EnemyState.Die;
             StateMachine.ChangeState(EnemyState.Die);
             return;
         }
 
-        Debug.Log($"{CurrentState} -> Damaged");
-
-        CurrentState = EnemyState.Damaged;
         StateMachine.ChangeState(EnemyState.Damaged);
     }
 

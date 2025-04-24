@@ -3865,6 +3865,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Model
       objectReference: {fileID: 0}
+    - target: {fileID: 7269525453101664401, guid: a5295e78cd3f41f4d9ccd1f82ccb9e0e, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: bb31ccfdfcd20424e9b7372c147de2de, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4348,7 +4352,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1524768691
 Transform:
   m_ObjectHideFlags: 0
@@ -5896,7 +5900,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EnemyStats: {fileID: 11400000, guid: 0afe73c14abe04645a7b6244df2b6ff8, type: 2}
   EnemyType: 1
-  CurrentState: 0
   StartPosition: {x: 0, y: 0, z: 0}
 --- !u!1001 &3716397176268148317
 PrefabInstance:
@@ -5906,6 +5909,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4816402883360731664, guid: ca1b6754de0f7bb438dda815543f452c, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4816402883360731664, guid: ca1b6754de0f7bb438dda815543f452c, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: bb31ccfdfcd20424e9b7372c147de2de, type: 2}
     - target: {fileID: 5594720065873319693, guid: ca1b6754de0f7bb438dda815543f452c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 25
@@ -5950,10 +5961,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy
       objectReference: {fileID: 0}
-    - target: {fileID: 9127718608880818141, guid: ca1b6754de0f7bb438dda815543f452c, type: 3}
-      propertyPath: EnemyStats
-      value: 
-      objectReference: {fileID: 11400000, guid: 0afe73c14abe04645a7b6244df2b6ff8, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

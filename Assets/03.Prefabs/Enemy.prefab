@@ -136,16 +136,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07a8ec8071fe74a45a6da72b122e6707, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrentState: 0
-  _player: {fileID: 0}
-  FindDistance: 7
-  ReturnDistance: 10
-  AttackDistance: 2
-  MoveSpeed: 3.3
-  AttackCoolTime: 2
-  DamagedTime: 0.5
-  DeathTime: 0
-  RandomRange: 7
+  EnemyStats: {fileID: 11400000, guid: 0afe73c14abe04645a7b6244df2b6ff8, type: 2}
+  EnemyType: 0
+  StartPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &6501965677067768572
 MonoBehaviour:
   m_ObjectHideFlags: 0
