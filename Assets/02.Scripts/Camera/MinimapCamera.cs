@@ -13,12 +13,18 @@ public class MinimapCamera : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Minus))
         {
-            _camera.orthographicSize += 1f;
+            if (_camera.orthographicSize < 11f)
+            {
+                _camera.orthographicSize += 1f;
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Equals))
         {
-            _camera.orthographicSize -= 1f;
+            if (_camera.orthographicSize > 1f)
+            {
+                _camera.orthographicSize -= 1f;
+            }
         }
     }
     private void LateUpdate()

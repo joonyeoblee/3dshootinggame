@@ -134,7 +134,7 @@ public class PlayerFire : PlayerBase
                     if (hitInfo.collider.gameObject.CompareTag("Enemy"))
                     {
                         Debug.Log(hitInfo.collider.gameObject.name);
-                        Enemy enemy = hitInfo.collider.GetComponent<Enemy>();
+                        IDamageable enemy = hitInfo.collider.GetComponent<IDamageable>();
 
                         Damage damage = new Damage(10, 30, gameObject);
                         enemy.TakeDamage(damage);

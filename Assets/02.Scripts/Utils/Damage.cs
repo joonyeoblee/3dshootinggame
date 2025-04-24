@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+[Serializable]
 public struct Damage
 {
     public int Value;
