@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,9 +14,8 @@ public class UI_Main : Singleton<UI_Main>
     [SerializeField] private TMP_Text _BulletText;
     [SerializeField] private TMP_Text _bombText;
 
+    [SerializeField] private Image _attackImage;
     public Crosshair Crosshair;
-
-    public Image HitImage;
 
     public Action OnHit;
     public void RefreshHealthSlider(float value)
@@ -51,5 +52,35 @@ public class UI_Main : Singleton<UI_Main>
     public void RefreshReloadSlider(float value)
     {
         _reloadSlider.value = value;
+    }
+
+    public void ActiveAttackImage()
+    {
+        Color color = _attackImage.color;
+        color.a = 1f;
+        _attackImage.color = color;
+
+        // _attackImage.DOFade(0f, 1f);
+        StartCoroutine(Fade_Coroutine(1f));
+    }
+
+    private IEnumerator Fade_Coroutine(float duration)
+    {
+        float elapsed = 0f;
+        Color color = _attackImage.color;
+        float startAlpha = color.a;
+        float endAlpha = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float alpha = Mathf.Lerp(startAlpha, endAlpha, elapsed / duration);
+            color.a = alpha;
+            _attackImage.color = color;
+            yield return null;
+        }
+
+        color.a = endAlpha;
+        _attackImage.color = color;
     }
 }

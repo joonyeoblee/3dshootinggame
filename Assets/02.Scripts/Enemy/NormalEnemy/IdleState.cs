@@ -6,6 +6,7 @@ public class IdleState : IEnemyState
     public void Enter(Enemy enemy)
     {
         _timer = 0f;
+        // enemy.Animator.SetTrigger("Idle");
     }
 
     public void Execute(Enemy enemy)

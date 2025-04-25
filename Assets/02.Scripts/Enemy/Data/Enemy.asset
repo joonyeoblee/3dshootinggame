@@ -18,7 +18,7 @@ MonoBehaviour:
     AttackCoolTime: 2
     MaxHealth: 100
     FindDistance: 7
-    AttackDistance: 2
+    AttackDistance: 3
     ReturnDistance: 10
     DamagedTime: 0.5
     IdleToPatrolTime: 2
@@ -27,7 +27,7 @@ MonoBehaviour:
     AttackCoolTime: 2
     MaxHealth: 100
     FindDistance: 1000
-    AttackDistance: 2
+    AttackDistance: 3
     ReturnDistance: 1000
     DamagedTime: 0.5
     IdleToPatrolTime: 2

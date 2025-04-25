@@ -18,6 +18,7 @@ public class Player : MonoBehaviour, IDamageable
     public void TakeDamage(Damage damage)
     {
         Health -= damage.Value;
+        UI_Main.Instance.RefreshHealthSlider(Health);
         Debug.Log($"{name} damage dealt from {damage.Value} to {Health}");
     }
 }

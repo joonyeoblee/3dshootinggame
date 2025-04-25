@@ -4,6 +4,7 @@ public class TraceState : IEnemyState
 
     public void Enter(Enemy enemy)
     {
+        enemy.Animator.SetBool("Trace", true);
     }
 
     public void Execute(Enemy enemy)
@@ -29,5 +30,6 @@ public class TraceState : IEnemyState
     public void Exit(Enemy enemy)
     {
         enemy.NavAgent.ResetPath();
+        enemy.Animator.SetBool("Trace", false);
     }
 }

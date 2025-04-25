@@ -20,14 +20,17 @@ public class AttackState : IEnemyState
 
         if (_timer >= enemy.Stat.AttackCoolTime)
         {
-            PerformAttack();
+            PerformAttack(enemy);
+
             _timer = 0f;
         }
     }
 
-    private void PerformAttack()
+    private void PerformAttack(Enemy enemy)
     {
         Debug.Log("공격!");
+        enemy.Animator.SetTrigger("Attack");
+        UI_Main.Instance.ActiveAttackImage();
     }
 
     public void Exit(Enemy enemy)
