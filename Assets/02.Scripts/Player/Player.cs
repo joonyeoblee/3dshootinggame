@@ -22,7 +22,7 @@ public class Player : MonoBehaviour, IDamageable
         UI_Main.Instance.RefreshHealthSlider(Health);
         Debug.Log($"{name} damage dealt from {damage.Value} to {Health}");
         UI_Main.Instance.ActiveAttackImage();
-        
+
         if (Health <= 0)
         {
             Die();

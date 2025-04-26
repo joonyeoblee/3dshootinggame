@@ -5,7 +5,7 @@ public class GameManager : Singleton<GameManager>
 {
     public PoolManager PoolManager;
 
-    public bool IsPlaying { get; private set; } = false;
+    public bool IsPlaying { get; private set; } = true;
 
     private void Update()
     {
