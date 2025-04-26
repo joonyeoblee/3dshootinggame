@@ -10,6 +10,8 @@ public class DamagedState : IEnemyState
 
     public void Execute(Enemy enemy)
     {
+         if(!GameManager.Instance.IsPlaying) return;
+
         _damagedTimer += Time.deltaTime;
 
         if (_damagedTimer >= enemy.Stat.DamagedTime)

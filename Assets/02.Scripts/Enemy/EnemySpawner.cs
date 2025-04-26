@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 public class EnemySpawner : MonoBehaviour
 {
     public float SpawnTimes = 1f;
@@ -6,6 +8,8 @@ public class EnemySpawner : MonoBehaviour
 
     private void Update()
     {
+        if(!GameManager.Instance.IsPlaying) return;
+
         _currentTime += Time.deltaTime;
         if (_currentTime >= SpawnTimes)
         {

@@ -17,7 +17,15 @@ public class UI_Main : Singleton<UI_Main>
     [SerializeField] private Image _attackImage;
     public Crosshair Crosshair;
 
-    public Action OnHit;
+
+    [SerializeField] private GameObject _gameState;
+    [SerializeField] private TMP_Text _gameStateText;
+
+    protected override void Start()
+    {
+        base.Start();
+        StartCoroutine(GameState_Coroutine());
+    }
     public void RefreshHealthSlider(float value)
     {
         _healthSlider.value = value;
@@ -82,5 +90,25 @@ public class UI_Main : Singleton<UI_Main>
 
         color.a = endAlpha;
         _attackImage.color = color;
+    }
+
+    private IEnumerator GameState_Coroutine()
+    {
+        _gameStateText.text = "Ready.";
+        yield return new WaitForSeconds(1f);
+        _gameStateText.text = "Ready..";
+        yield return new WaitForSeconds(1f);
+        _gameStateText.text = "Ready...";
+        yield return new WaitForSeconds(1f);
+        _gameStateText.text = "Start!";
+        yield return new WaitForSeconds(1f);
+        GameManager.Instance.StartGame();
+        _gameState.SetActive(false);
+    }
+
+    public void EndGame()
+    {
+        _gameState.SetActive(true);
+        _gameStateText.text = "Game Over!";
     }
 }

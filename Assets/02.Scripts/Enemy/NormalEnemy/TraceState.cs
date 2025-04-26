@@ -9,6 +9,8 @@ public class TraceState : IEnemyState
 
     public void Execute(Enemy enemy)
     {
+         if(!GameManager.Instance.IsPlaying) return;
+
         if (Vector3.Distance(enemy.Player.transform.position, enemy.transform.position) <= enemy.Stat.AttackDistance)
         {
             enemy.StateMachine.ChangeState(EnemyState.Attack);

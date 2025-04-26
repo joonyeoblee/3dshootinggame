@@ -11,6 +11,8 @@ public class IdleState : IEnemyState
 
     public void Execute(Enemy enemy)
     {
+        if(!GameManager.Instance.IsPlaying) return;
+
         _timer += Time.deltaTime;
         if (_timer >= enemy.Stat.IdleToPatrolTime)
         {

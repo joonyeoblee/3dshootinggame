@@ -90,10 +90,12 @@ public class Enemy : MonoBehaviour, IDamageable
     }
     private void Start()
     {
+
         StartPosition = transform.position;
         Stat = EnemyStats.GetData(EnemyType);
         Player = GameObject.FindGameObjectWithTag("Player");
         _poolItem = GetComponent<PoolItem>();
+
         // 에이전트 사용으로 변경
         NavAgent = GetComponent<NavMeshAgent>();
         NavAgent.speed = Stat.MoveSpeed;

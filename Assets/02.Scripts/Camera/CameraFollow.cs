@@ -16,6 +16,8 @@ public class CameraFollow : MonoBehaviour
     }
     void Update()
     {
+        if(!GameManager.Instance.IsPlaying) return;
+
         if (Input.GetKeyDown(KeyCode.Alpha8))
         {
             TPSMode = true;

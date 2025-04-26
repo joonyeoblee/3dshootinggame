@@ -11,6 +11,8 @@ public class DieState : IEnemyState
 
     public void Execute(Enemy enemy)
     {
+        if(!GameManager.Instance.IsPlaying) return;
+
         _dieTimer += Time.deltaTime;
         // if (_dieTimer >= enemy.DyingTime)
         // {

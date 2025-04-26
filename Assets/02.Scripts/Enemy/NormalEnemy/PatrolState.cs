@@ -30,6 +30,8 @@ public class PatrolState : IEnemyState
 
     public void Execute(Enemy enemy)
     {
+        if(!GameManager.Instance.IsPlaying) return;
+        Debug.Log("Patrol");
         _changePointTimer += Time.deltaTime;
 
         if (Vector3.Distance(_nextPoint, enemy.transform.position) <= enemy.Stat.ReturnDistance || _changePointTimer >= 3f)

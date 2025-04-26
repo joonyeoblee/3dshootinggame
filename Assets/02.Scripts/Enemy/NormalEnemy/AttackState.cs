@@ -5,11 +5,13 @@ public class AttackState : IEnemyState
 
     public void Enter(Enemy enemy)
     {
-        _timer = 0f;
+        _timer = enemy.Stat.AttackCoolTime;
     }
 
     public void Execute(Enemy enemy)
     {
+        if(!GameManager.Instance.IsPlaying) return;
+
         _timer += Time.deltaTime;
 
         if (Vector3.Distance(enemy.transform.position, enemy.Player.transform.position) >= enemy.Stat.AttackDistance)
@@ -30,7 +32,9 @@ public class AttackState : IEnemyState
     {
         Debug.Log("공격!");
         enemy.Animator.SetTrigger("Attack");
-        UI_Main.Instance.ActiveAttackImage();
+
+        Damage damage = new Damage(enemy.Stat.AttackDamage,0,enemy.gameObject );
+        enemy.Player.GetComponent<Player>().TakeDamage(damage);
     }
 
     public void Exit(Enemy enemy)

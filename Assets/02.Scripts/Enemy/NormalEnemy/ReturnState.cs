@@ -7,6 +7,8 @@ public class ReturnState : IEnemyState
 
     public void Execute(Enemy enemy)
     {
+         if(!GameManager.Instance.IsPlaying) return;
+
         if (Vector3.Distance(enemy.transform.position, enemy.StartPosition) <= enemy.Stat.ReturnDistance)
         {
             enemy.transform.position = enemy.StartPosition;

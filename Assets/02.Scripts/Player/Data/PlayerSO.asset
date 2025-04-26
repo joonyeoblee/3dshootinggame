@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26fa42fa333d93e4d87a9382c504a07b, type: 3}
   m_Name: PlayerSO
   m_EditorClassIdentifier: 
+  MaxHealth: 40
   RunSpeed: 12
   WalkSpeed: 7
   JumpPower: 3
-  MaxStamina: 1
   StaminaCost: 0.05
   StaminaRecovery: 0.4
   RollStaminaCost: 0.3

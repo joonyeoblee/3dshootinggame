@@ -2,6 +2,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "PlayerSO", menuName = "ScriptableObjects/PlayerSO")]
 public class PlayerSO : ScriptableObject
 {
+    public int MaxHealth = 100;
     [Header("이동")]
     public float RunSpeed = 12f;
     public float WalkSpeed = 7f;

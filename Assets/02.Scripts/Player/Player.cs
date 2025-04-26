@@ -11,7 +11,8 @@ public class Player : MonoBehaviour, IDamageable
 
     private void Start()
     {
-        Health = 100;
+        Health = PlayerData.MaxHealth;
+
         Animator = Model.GetComponent<Animator>();
     }
 
@@ -20,5 +21,16 @@ public class Player : MonoBehaviour, IDamageable
         Health -= damage.Value;
         UI_Main.Instance.RefreshHealthSlider(Health);
         Debug.Log($"{name} damage dealt from {damage.Value} to {Health}");
+        UI_Main.Instance.ActiveAttackImage();
+        
+        if (Health <= 0)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        GameManager.Instance.EndGame();
     }
 }

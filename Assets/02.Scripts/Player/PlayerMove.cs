@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 public class PlayerMove : PlayerBase
 {
@@ -36,15 +37,17 @@ public class PlayerMove : PlayerBase
     protected override void Start()
     {
         base.Start();
+
         _playerData = _player.PlayerData;
         _characterController = GetComponent<CharacterController>();
         UI_Main.Instance.RefreshStaminaSlider(_currentStamina);
         _cameraTransform = FPSCameraPosition.transform;
         _cameraOriginalLocalPos = FPSCameraPosition.transform.localPosition;
     }
-
     private void Update()
     {
+        if(!GameManager.Instance.IsPlaying) return;
+
         _isTouchingWall = false;
 
         HandleMovement();
@@ -246,4 +249,5 @@ public class PlayerMove : PlayerBase
         _pushDirection = direction.normalized;
         _pushTimer = _playerData.PushDuration;
     }
+
 }

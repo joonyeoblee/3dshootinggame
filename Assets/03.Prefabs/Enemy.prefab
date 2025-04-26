@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2807932500914720871}
   - component: {fileID: 8737515455492497252}
   - component: {fileID: 7516301908225521989}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: BackGround
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -173,7 +173,7 @@ GameObject:
   - component: {fileID: 5244896390568956023}
   - component: {fileID: 201386407156736911}
   - component: {fileID: 5263886757792903331}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: Red
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -394,7 +394,7 @@ GameObject:
   - component: {fileID: 5790416928131677417}
   - component: {fileID: 782190181903263501}
   - component: {fileID: 37106654359954047}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: Health
   m_TagString: Untagged
   m_Icon: {fileID: 0}
