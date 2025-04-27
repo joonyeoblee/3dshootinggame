@@ -35,10 +35,11 @@ public class PlayerFire : PlayerBase
     private float _currentSpread;
     private float _verticalRecoilOffset;
 
+    public float Angle = 30f;
     public float Radius;
     public LayerMask TargetMask;
     private bool _isSlashing;
-    private readonly float _slashCooldown = 0.5f; // 슬래시 쿨타임 (초)
+    private readonly float _slashCooldown = 2f;
     private float _slashTimer;
 
     protected override void Start()
@@ -180,7 +181,7 @@ public class PlayerFire : PlayerBase
 
     private void Slash()
     {
-        if (_isSlashing)
+        if (_isSlashing || _slashTimer > 0)
         {
             return;
         }
@@ -190,7 +191,7 @@ public class PlayerFire : PlayerBase
 
         Collider[] hits = Physics.OverlapSphere(transform.position, Radius, TargetMask);
 
-        float halfAngleRad = 30f * 0.5f * Mathf.Deg2Rad;
+        float halfAngleRad = Angle * 0.5f * Mathf.Deg2Rad;
         float cosHalfAngle = Mathf.Cos(halfAngleRad);
         _player.Animator.SetTrigger("Slash");
         foreach (Collider hit in hits)
@@ -200,11 +201,11 @@ public class PlayerFire : PlayerBase
 
             if (dot >= cosHalfAngle)
             {
-                // 대상이 부채꼴 범위 안에 있음
                 Debug.Log("적 타격: " + hit.name);
 
                 IDamageable damageable = hit.GetComponent<IDamageable>();
-                damageable.TakeDamage(new Damage(20, 30, gameObject));
+                Damage damage = new Damage(20, 30, gameObject);
+                damageable.TakeDamage(damage);
             }
         }
     }

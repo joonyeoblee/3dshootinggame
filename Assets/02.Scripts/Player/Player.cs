@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Player : MonoBehaviour, IDamageable
@@ -13,11 +14,18 @@ public class Player : MonoBehaviour, IDamageable
     public bool GunMode;
     public bool KnifeMode;
 
+    // 추가: 상체 본
+    private Transform spineBone;
+    private Transform chestBone;
+
+    private readonly Vector3 _modelOriginalLocalPos = new Vector3(0.058f, -1f, -0.02f);
+
     private void Start()
     {
         Health = PlayerData.MaxHealth;
 
         Animator = Model.GetComponent<Animator>();
+
     }
 
     public void TakeDamage(Damage damage)
@@ -33,13 +41,21 @@ public class Player : MonoBehaviour, IDamageable
         }
     }
 
-    public void Update()
+    private void Update()
     {
+        if (!GameManager.Instance.IsPlaying)
+        {
+            return;
+        }
+
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             GunMode = true;
             KnifeMode = false;
             Animator.SetTrigger("Gun");
+
+            // 총 모드 전환 시, Model 회전 및 위치 보정
+            SetModelRotation();
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
@@ -49,6 +65,15 @@ public class Player : MonoBehaviour, IDamageable
             Animator.SetTrigger("Knife");
         }
     }
+
+    private void SetModelRotation()
+    {
+        Model.transform.localRotation = Quaternion.Euler(0f, 40f, 0f);
+        Model.transform.localPosition = _modelOriginalLocalPos;
+    }
+
+
+
 
     private void Die()
     {
