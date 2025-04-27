@@ -1,4 +1,5 @@
 using UnityEngine;
+
 public class Player : MonoBehaviour, IDamageable
 {
     public PlayerSO PlayerData;
@@ -8,6 +9,9 @@ public class Player : MonoBehaviour, IDamageable
     public Animator Animator;
 
     public int Health { get; set; }
+
+    public bool GunMode;
+    public bool KnifeMode;
 
     private void Start()
     {
@@ -26,6 +30,23 @@ public class Player : MonoBehaviour, IDamageable
         if (Health <= 0)
         {
             Die();
+        }
+    }
+
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            GunMode = true;
+            KnifeMode = false;
+            Animator.SetTrigger("Gun");
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            GunMode = false;
+            KnifeMode = true;
+            Animator.SetTrigger("Knife");
         }
     }
 

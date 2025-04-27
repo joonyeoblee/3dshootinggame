@@ -1,4 +1,5 @@
 using UnityEngine;
+
 public class PlayerRotate : PlayerBase
 {
     public float RotationSpeed = 200f;
@@ -8,6 +9,11 @@ public class PlayerRotate : PlayerBase
 
     void Update()
     {
+        if (!GameManager.Instance.IsPlaying)
+        {
+            return;
+        }
+
         // 1. 마우스 입력을 받는다.
         float mouseX = Input.GetAxis("Mouse X");
         // float mouseY = Input.GetAxis("Mouse Y");

@@ -36,6 +36,7 @@ public class Enemy : MonoBehaviour, IDamageable
     public Image HealthBar;
 
     private PoolItem _poolItem;
+
     public EnemyStat Stat { get; private set; }
     [Header("# StateMachine")]
     public EnemyStateMachine StateMachine { get; protected set; }
@@ -115,6 +116,7 @@ public class Enemy : MonoBehaviour, IDamageable
     private void Update()
     {
         StateMachine.Update();
+        Debug.Log(StateMachine.CurrentState);
     }
 
 

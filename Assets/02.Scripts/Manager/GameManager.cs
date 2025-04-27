@@ -1,12 +1,16 @@
-using System;
 using Redcode.Pools;
 using UnityEngine;
+
 public class GameManager : Singleton<GameManager>
 {
     public PoolManager PoolManager;
 
-    public bool IsPlaying { get; private set; } = true;
+    public bool IsPlaying { get; private set; }
 
+    private void Start()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+    }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))

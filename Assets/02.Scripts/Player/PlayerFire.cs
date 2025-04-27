@@ -1,5 +1,6 @@
 using DG.Tweening;
 using UnityEngine;
+
 public class PlayerFire : PlayerBase
 {
     // 목표 : 마우스 왼쪽 버튼을 누르면 카메라가 바라보는 방향으로 총을 발사하고 싶다
@@ -34,6 +35,12 @@ public class PlayerFire : PlayerBase
     private float _currentSpread;
     private float _verticalRecoilOffset;
 
+    public float Radius;
+    public LayerMask TargetMask;
+    private bool _isSlashing;
+    private readonly float _slashCooldown = 0.5f; // 슬래시 쿨타임 (초)
+    private float _slashTimer;
+
     protected override void Start()
     {
         base.Start();
@@ -53,7 +60,25 @@ public class PlayerFire : PlayerBase
 
         Bomb();
 
-        Fire();
+        if (_player.GunMode)
+        {
+            Fire();
+        }
+
+
+        if (_isSlashing)
+        {
+            _slashTimer -= Time.deltaTime;
+            if (_slashTimer <= 0f)
+            {
+                _isSlashing = false;
+            }
+        }
+
+        if (_player.KnifeMode && Input.GetMouseButton(0))
+        {
+            Slash();
+        }
 
         _currentSpread = Mathf.MoveTowards(_currentSpread, 0f, spreadRecoverySpeed * Time.deltaTime);
         _verticalRecoilOffset = Mathf.MoveTowards(_verticalRecoilOffset, 0f, spreadRecoverySpeed * Time.deltaTime);
@@ -150,6 +175,37 @@ public class PlayerFire : PlayerBase
             _currentSpread = Mathf.Min(_currentSpread + 0.5f, maxSpread);
             Camera.main.GetComponent<CameraRotate>().AddRecoil(0.4f);
 
+        }
+    }
+
+    private void Slash()
+    {
+        if (_isSlashing)
+        {
+            return;
+        }
+
+        _isSlashing = true;
+        _slashTimer = _slashCooldown;
+
+        Collider[] hits = Physics.OverlapSphere(transform.position, Radius, TargetMask);
+
+        float halfAngleRad = 30f * 0.5f * Mathf.Deg2Rad;
+        float cosHalfAngle = Mathf.Cos(halfAngleRad);
+        _player.Animator.SetTrigger("Slash");
+        foreach (Collider hit in hits)
+        {
+            Vector3 dirToTarget = (hit.transform.position - transform.position).normalized;
+            float dot = Vector3.Dot(transform.forward, dirToTarget);
+
+            if (dot >= cosHalfAngle)
+            {
+                // 대상이 부채꼴 범위 안에 있음
+                Debug.Log("적 타격: " + hit.name);
+
+                IDamageable damageable = hit.GetComponent<IDamageable>();
+                damageable.TakeDamage(new Damage(20, 30, gameObject));
+            }
         }
     }
     private void Bomb()

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+
 public class ReturnState : IEnemyState
 {
     public void Enter(Enemy enemy)
@@ -11,8 +12,13 @@ public class ReturnState : IEnemyState
 
         if (Vector3.Distance(enemy.transform.position, enemy.StartPosition) <= enemy.Stat.ReturnDistance)
         {
-            enemy.transform.position = enemy.StartPosition;
-            enemy.StateMachine.ChangeState(EnemyState.Idle);
+            // enemy.transform.position = enemy.StartPosition;
+            enemy.NavAgent.SetDestination(enemy.StartPosition);
+
+            if (Vector3.Distance(enemy.transform.position, enemy.StartPosition) <= 0.1f)
+            {
+                enemy.StateMachine.ChangeState(EnemyState.Idle);
+            }
             return;
         }
         if (Vector3.Distance(enemy.transform.position, enemy.Player.transform.position) <= enemy.Stat.FindDistance)
