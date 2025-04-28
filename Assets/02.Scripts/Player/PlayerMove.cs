@@ -62,7 +62,17 @@ public class PlayerMove : PlayerBase
     {
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
-        Vector3 dir = new Vector3(horizontal, 0, vertical).normalized;
+        // 2. 입력으로부터 방향을 설정한다.
+        Vector3 dir = new Vector3(horizontal, 0, vertical);
+        // _animator.SetLayerWeight(2, player.Health / player.MaxHealth);
+        // idle, run -> weight에 따라 base Layer가중치를 줄 지 vs injured Layer에 가중치를 줄 지 표현
+        // -> 체력이 낮을 수록 고통스러운 모습을 묘사할 수 있다.
+
+
+        _player.Animator.SetFloat("MoveAmount", dir.magnitude);
+
+        dir = dir.normalized;
+        // 2-1. 메인 카메라를 기준으로 방향을 변환한다.
         dir = Camera.main.transform.TransformDirection(dir);
 
         _currentStamina = Mathf.Clamp(_currentStamina, 0f, 1f);

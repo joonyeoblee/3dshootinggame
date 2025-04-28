@@ -61,6 +61,9 @@ public class Player : MonoBehaviour, IDamageable
             KnifeMode = true;
             Animator.SetTrigger("Knife");
         }
+
+        Animator.SetLayerWeight(2, 1 - Health / PlayerData.MaxHealth - 0.5f);
+
     }
 
     private void SetModelRotation()

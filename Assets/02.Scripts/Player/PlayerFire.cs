@@ -1,6 +1,5 @@
 using DG.Tweening;
 using UnityEngine;
-
 public class PlayerFire : PlayerBase
 {
     // 목표 : 마우스 왼쪽 버튼을 누르면 카메라가 바라보는 방향으로 총을 발사하고 싶다
@@ -130,6 +129,8 @@ public class PlayerFire : PlayerBase
                 _currentReloadGaugeValue = 0f;
                 _reloadTween = null;
             }
+
+            _player.Animator.SetTrigger("Shoot");
 
             // 조준선 퍼지기
             UI_Main.Instance.Crosshair.Recoil();

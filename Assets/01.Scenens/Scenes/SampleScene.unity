@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 92b1a7bd563ce408f946597e224b4e58, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -210,12 +210,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 29957570}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.537, y: 0.9856, z: 0.681}
+  m_LocalRotation: {x: 0.29453468, y: -0.64284474, z: -0.64284474, w: 0.29453468}
+  m_LocalPosition: {x: -0.765, y: 0.317, z: 0.968}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2055599648}
+  m_Father: {fileID: 1679167977}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &117756344
 GameObject:
@@ -431,7 +431,7 @@ Transform:
   m_GameObject: {fileID: 188340147}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.112, y: 0.361, z: 0.014}
+  m_LocalPosition: {x: 0.112, y: 0.614, z: 0.184}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -886,7 +886,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.1
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -3439,7 +3439,7 @@ Transform:
   m_GameObject: {fileID: 904428041}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.704, z: 0}
+  m_LocalPosition: {x: 0, y: 1.06, z: 0.117}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5584,6 +5584,7 @@ Transform:
   m_Children:
   - {fileID: 903039506}
   - {fileID: 299370907}
+  - {fileID: 29957571}
   m_Father: {fileID: 2080790141}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1769591009
@@ -6717,7 +6718,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2080790141}
-  - {fileID: 29957571}
   - {fileID: 455665391}
   - {fileID: 904428042}
   - {fileID: 881111470}
@@ -6902,7 +6902,7 @@ Animator:
   m_GameObject: {fileID: 2080790139}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: fcb334eb247ae3e488abb081c847cf09, type: 3}
-  m_Controller: {fileID: 9100000, guid: 210037f90b091fa4f9c571fa615e070e, type: 2}
+  m_Controller: {fileID: 9100000, guid: 7aaf85cabd7af45ff94d0ddc229c5be9, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
