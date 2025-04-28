@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -68,6 +66,7 @@ public class UI_Main : Singleton<UI_Main>
         color.a = 1f;
         _attackImage.color = color;
 
+        // dotween 사용시..
         // _attackImage.DOFade(0f, 1f);
         StartCoroutine(Fade_Coroutine(1f));
     }

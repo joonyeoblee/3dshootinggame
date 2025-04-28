@@ -13,7 +13,6 @@ public class BillboardUI : MonoBehaviour
     {
         if (_mainCamera == null) return;
 
-        // 카메라를 향하도록 회전
         transform.LookAt(transform.position + _mainCamera.transform.rotation * Vector3.forward,
             _mainCamera.transform.rotation * Vector3.up);
     }

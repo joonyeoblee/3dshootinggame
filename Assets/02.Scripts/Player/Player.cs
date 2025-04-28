@@ -1,6 +1,4 @@
-using System.Collections;
 using UnityEngine;
-
 public class Player : MonoBehaviour, IDamageable
 {
     public PlayerSO PlayerData;
@@ -18,14 +16,13 @@ public class Player : MonoBehaviour, IDamageable
     private Transform spineBone;
     private Transform chestBone;
 
-    private readonly Vector3 _modelOriginalLocalPos = new Vector3(0.058f, -1f, -0.02f);
-
     private void Start()
     {
         Health = PlayerData.MaxHealth;
 
         Animator = Model.GetComponent<Animator>();
 
+        GunMode = true;
     }
 
     public void TakeDamage(Damage damage)
@@ -69,7 +66,7 @@ public class Player : MonoBehaviour, IDamageable
     private void SetModelRotation()
     {
         Model.transform.localRotation = Quaternion.Euler(0f, 40f, 0f);
-        Model.transform.localPosition = _modelOriginalLocalPos;
+        Model.transform.localPosition = new Vector3(0.058f, -1f, -0.02f);
     }
 
 

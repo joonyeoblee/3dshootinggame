@@ -76,9 +76,6 @@ public class Enemy : MonoBehaviour, IDamageable
                 EnemyState.Damaged, new DamagedState()
             },
             {
-                EnemyState.Die, new DieState()
-            },
-            {
                 EnemyState.Patrol, new PatrolState()
             }
         };
@@ -123,10 +120,6 @@ public class Enemy : MonoBehaviour, IDamageable
     public void TakeDamage(Damage damage)
     {
         Debug.Log($"{name} From{damage.DamageFrom} Take {damage.Value} remain {Health}");
-        if (StateMachine.CurrentState.GetType() == typeof(DieState))
-        {
-            return;
-        }
 
         Health -= damage.Value;
         HealthBar.fillAmount = Health / 100f;
