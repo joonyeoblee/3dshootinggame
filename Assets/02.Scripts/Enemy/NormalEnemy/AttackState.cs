@@ -10,7 +10,7 @@ public class AttackState : IEnemyState
 
     public void Execute(Enemy enemy)
     {
-        if(!GameManager.Instance.IsPlaying) return;
+        if (!GameManager.Instance.IsPlaying) return;
 
         _timer += Time.deltaTime;
 
@@ -22,23 +22,13 @@ public class AttackState : IEnemyState
 
         if (_timer >= enemy.Stat.AttackCoolTime)
         {
-            PerformAttack(enemy);
-
+            enemy.Animator.SetTrigger("Attack"); // 애니메이션 트리거만 건다
             _timer = 0f;
         }
     }
 
-    private void PerformAttack(Enemy enemy)
-    {
-        Debug.Log("공격!");
-        enemy.Animator.SetTrigger("Attack");
-
-        Damage damage = new Damage(enemy.Stat.AttackDamage,0,enemy.gameObject );
-        enemy.Player.GetComponent<Player>().TakeDamage(damage);
-    }
-
     public void Exit(Enemy enemy)
     {
-
+        // Exit 필요 없음
     }
 }

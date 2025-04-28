@@ -23,18 +23,24 @@ public class CameraFollow : MonoBehaviour
             TPSMode = true;
             FPSMode = false;
             TOPMode = false;
+
+            UI_Main.Instance.Crosshair.gameObject.SetActive(true);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha0))
         {
             FPSMode = true;
             TPSMode = false;
             TOPMode = false;
+
+            UI_Main.Instance.Crosshair.gameObject.SetActive(true);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha9))
         {
             TOPMode = true;
             FPSMode = false;
             TPSMode = false;
+
+            UI_Main.Instance.Crosshair.gameObject.SetActive(false);
         }
 
         if (TPSMode)

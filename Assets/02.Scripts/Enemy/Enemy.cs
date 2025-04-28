@@ -44,9 +44,9 @@ public class Enemy : MonoBehaviour, IDamageable
     public Animator Animator;
 
     public GameObject[] Models;
-    /// <summary>
-    ///     행동 정의
-    /// </summary>
+
+    public float DyingTime { get; private set; } = 2f;
+
     protected virtual void AwakeInit()
     {
         int random = Random.Range(0, Models.Length);
@@ -77,6 +77,9 @@ public class Enemy : MonoBehaviour, IDamageable
             },
             {
                 EnemyState.Patrol, new PatrolState()
+            },
+            {
+                EnemyState.Die, new DieState()
             }
         };
         StateMachine = new EnemyStateMachine(this, dict);
@@ -119,25 +122,41 @@ public class Enemy : MonoBehaviour, IDamageable
 
     public void TakeDamage(Damage damage)
     {
-        Debug.Log($"{name} From{damage.DamageFrom} Take {damage.Value} remain {Health}");
-
         Health -= damage.Value;
         HealthBar.fillAmount = Health / 100f;
-        if (Health <= 0)
+
+        if (StateMachine.CurrentState.GetType() == typeof(DieState))
         {
-            StateMachine.ChangeState(EnemyState.Die);
             return;
         }
 
-        StateMachine.ChangeState(EnemyState.Damaged);
+        if (Health <= 0)
+        {
+            StateMachine.ChangeState(EnemyState.Die);
+        }
+        else
+        {
+            StateMachine.ChangeState(EnemyState.Damaged);
+        }
     }
+    public void DealDamage()
+    {
+        Debug.Log("애니메이션 이벤트로 공격함!");
 
+        if (Player == null) return;
+
+        Damage damage = new Damage(Stat.AttackDamage, 0, gameObject);
+        Player.GetComponent<Player>().TakeDamage(damage);
+    }
     public void Die()
     {
         StartCoroutine(Die_Coroutine());
     }
     private IEnumerator Die_Coroutine()
     {
+        Animator.SetTrigger("Die");
+        yield return null; // 한 프레임 기다림
+        Animator.ResetTrigger("Die"); // 트리거 초기화
         yield return new WaitForSeconds(2f);
         gameObject.SetActive(false);
         _poolItem.ReturnToPoolAs<Enemy>();

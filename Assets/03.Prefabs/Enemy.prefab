@@ -379,7 +379,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 14
   m_CollisionDetection: 0
 --- !u!1 &7342114438170460564
 GameObject:
@@ -556,6 +556,10 @@ PrefabInstance:
     - target: {fileID: 1998371697940912222, guid: d58be77cba3adf54cb14b15052b86514, type: 3}
       propertyPath: m_Layer
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1998371697940912222, guid: d58be77cba3adf54cb14b15052b86514, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2057808353243881084, guid: d58be77cba3adf54cb14b15052b86514, type: 3}
       propertyPath: m_Layer
@@ -760,7 +764,7 @@ PrefabInstance:
     - target: {fileID: 7537417665459280382, guid: d58be77cba3adf54cb14b15052b86514, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: bb31ccfdfcd20424e9b7372c147de2de, type: 2}
+      objectReference: {fileID: 9100000, guid: 2c3407f67b246464a9ad8a87eb678c7c, type: 2}
     - target: {fileID: 7569792997643425785, guid: d58be77cba3adf54cb14b15052b86514, type: 3}
       propertyPath: m_Layer
       value: 10
@@ -1140,7 +1144,7 @@ PrefabInstance:
     - target: {fileID: 7269525453101664401, guid: a5295e78cd3f41f4d9ccd1f82ccb9e0e, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: bb31ccfdfcd20424e9b7372c147de2de, type: 2}
+      objectReference: {fileID: 9100000, guid: 2c3407f67b246464a9ad8a87eb678c7c, type: 2}
     - target: {fileID: 7419191053682259640, guid: a5295e78cd3f41f4d9ccd1f82ccb9e0e, type: 3}
       propertyPath: m_Layer
       value: 10

@@ -15,7 +15,7 @@ public class UI_Main : Singleton<UI_Main>
     [SerializeField] private Image _attackImage;
     public Crosshair Crosshair;
 
-
+    [SerializeField] private float _waitTime = 1f;
     [SerializeField] private GameObject _gameState;
     [SerializeField] private TMP_Text _gameStateText;
 
@@ -93,14 +93,19 @@ public class UI_Main : Singleton<UI_Main>
 
     private IEnumerator GameState_Coroutine()
     {
-        _gameStateText.text = "Ready.";
-        yield return new WaitForSeconds(1f);
-        _gameStateText.text = "Ready..";
-        yield return new WaitForSeconds(1f);
-        _gameStateText.text = "Ready...";
-        yield return new WaitForSeconds(1f);
-        _gameStateText.text = "Start!";
-        yield return new WaitForSeconds(1f);
+        string[] messages =
+        {
+            "Ready.",
+            "Ready..",
+            "Ready...",
+            "Start!"
+        };
+
+        foreach(string message in messages)
+        {
+            _gameStateText.text = message;
+            yield return new WaitForSeconds(_waitTime);
+        }
         GameManager.Instance.StartGame();
         _gameState.SetActive(false);
     }

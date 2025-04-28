@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 public class PlayerMove : PlayerBase
 {
@@ -64,6 +63,7 @@ public class PlayerMove : PlayerBase
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
         Vector3 dir = new Vector3(horizontal, 0, vertical).normalized;
+        dir = Camera.main.transform.TransformDirection(dir);
 
         _currentStamina = Mathf.Clamp(_currentStamina, 0f, 1f);
         UI_Main.Instance.RefreshStaminaSlider(_currentStamina);
@@ -88,7 +88,7 @@ public class PlayerMove : PlayerBase
         }
 
         _characterController.Move(dir * _moveSpeed * Time.deltaTime);
-        
+
         // 달리기 끝날 때 위치 보정
         if (Input.GetKeyUp(KeyCode.LeftShift))
         {

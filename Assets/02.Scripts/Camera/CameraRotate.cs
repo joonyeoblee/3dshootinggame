@@ -42,7 +42,7 @@ public class CameraRotate : MonoBehaviour
         }
         else
         {
-            Pivot.transform.rotation = Quaternion.Euler(0f, _pitch, 0f);
+            Pivot.transform.rotation = Quaternion.Euler(_pitch, _yaw, 0f);
         }
 
     }
