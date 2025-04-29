@@ -7,9 +7,8 @@ public class PlayerFire : PlayerBase
     // 필요 속성
     // -발사 위치
     public GameObject FirePosition;
+    public ParticleSystem FireParticles;
     // [SerializeField] private Crosshair crosshair;
-
-    [SerializeField] private GameObject _muzzle;
     // - 던지는 힘
     public float MaxPower = 15f;
     public float ThrowPower;
@@ -41,6 +40,10 @@ public class PlayerFire : PlayerBase
     private readonly float _slashCooldown = 2f;
     private float _slashTimer;
 
+    public float ZoomInSize = 15f;
+    public float ZoomOutSize = 60f;
+    private bool _zoomMode;
+
     protected override void Start()
     {
         base.Start();
@@ -58,7 +61,9 @@ public class PlayerFire : PlayerBase
             _currentTime -= Time.deltaTime;
         }
 
-        Bomb();
+        SniperZoom();
+        // TODO: 폭탄 발싸 3번으로 바꿔야함
+        // Bomb();
 
         if (_player.GunMode)
         {
@@ -131,6 +136,7 @@ public class PlayerFire : PlayerBase
             }
 
             _player.Animator.SetTrigger("Shoot");
+            FireParticles.Play();
 
             // 조준선 퍼지기
             UI_Main.Instance.Crosshair.Recoil();
@@ -207,6 +213,25 @@ public class PlayerFire : PlayerBase
                 IDamageable damageable = hit.GetComponent<IDamageable>();
                 Damage damage = new Damage(20, 30, gameObject);
                 damageable.TakeDamage(damage);
+            }
+        }
+    }
+
+    private void SniperZoom()
+    {
+        if (Input.GetMouseButtonDown(1) && _player.GunMode)
+        {
+            _zoomMode = !_zoomMode;
+
+            if (_zoomMode)
+            {
+                UI_Main.Instance.ToggleSniperImage();
+                Camera.main.fieldOfView = ZoomInSize;
+            }
+            else
+            {
+                UI_Main.Instance.ToggleSniperImage();
+                Camera.main.fieldOfView = ZoomOutSize;
             }
         }
     }

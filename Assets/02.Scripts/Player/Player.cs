@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 public class Player : MonoBehaviour, IDamageable
 {
@@ -16,6 +17,7 @@ public class Player : MonoBehaviour, IDamageable
     private Transform spineBone;
     private Transform chestBone;
 
+    [SerializeField] private GameObject _knife;
     private void Start()
     {
         Health = PlayerData.MaxHealth;
@@ -41,32 +43,48 @@ public class Player : MonoBehaviour, IDamageable
     private void Update()
     {
         if (!GameManager.Instance.IsPlaying)
-        {
             return;
-        }
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            GunMode = true;
-            KnifeMode = false;
-            Animator.SetTrigger("Gun");
+            if (!GunMode) // 총모드가 아닐 때만 실행
+            {
+                GunMode = true;
+                KnifeMode = false;
+                _knife.SetActive(false);
+                SetModelRotation();
 
-            // 총 모드 전환 시, Model 회전 및 위치 보정
-            SetModelRotation();
+                DOTween.To(
+                    () => Animator.GetFloat("GunKnife"),
+                    x => Animator.SetFloat("GunKnife", x),
+                    0f,
+                    0.2f
+                );
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            GunMode = false;
-            KnifeMode = true;
-            Animator.SetTrigger("Knife");
+            if (!KnifeMode) // 칼모드가 아닐 때만 실행
+            {
+                GunMode = false;
+                KnifeMode = true;
+                _knife.SetActive(true);
+
+                DOTween.To(
+                    () => Animator.GetFloat("GunKnife"),
+                    x => Animator.SetFloat("GunKnife", x),
+                    1f,
+                    0.2f
+                );
+            }
         }
 
         Animator.SetLayerWeight(2, 1 - Health / PlayerData.MaxHealth - 0.5f);
-
     }
 
-    private void SetModelRotation()
+
+    public void SetModelRotation()
     {
         Model.transform.localRotation = Quaternion.Euler(0f, 40f, 0f);
         Model.transform.localPosition = new Vector3(0.058f, -1f, -0.02f);

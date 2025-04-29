@@ -15,7 +15,7 @@ MonoBehaviour:
   MaxHealth: 100
   RunSpeed: 12
   WalkSpeed: 7
-  JumpPower: 3
+  JumpPower: 6
   StaminaCost: 0.05
   StaminaRecovery: 0.4
   RollStaminaCost: 0.3

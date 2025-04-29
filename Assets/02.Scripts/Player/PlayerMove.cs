@@ -62,27 +62,20 @@ public class PlayerMove : PlayerBase
     {
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
-        // 2. 입력으로부터 방향을 설정한다.
-        Vector3 dir = new Vector3(horizontal, 0, vertical);
-        // _animator.SetLayerWeight(2, player.Health / player.MaxHealth);
-        // idle, run -> weight에 따라 base Layer가중치를 줄 지 vs injured Layer에 가중치를 줄 지 표현
-        // -> 체력이 낮을 수록 고통스러운 모습을 묘사할 수 있다.
 
+        Vector3 moveDir = new Vector3(horizontal, 0, vertical);
+        _player.Animator.SetFloat("MoveAmount", moveDir.magnitude);
 
-        _player.Animator.SetFloat("MoveAmount", dir.magnitude);
-
-        dir = dir.normalized;
-        // 2-1. 메인 카메라를 기준으로 방향을 변환한다.
-        dir = Camera.main.transform.TransformDirection(dir);
+        moveDir = moveDir.normalized;
+        moveDir = Camera.main.transform.TransformDirection(moveDir);
+        moveDir.y = 0f; // 수평 방향만 적용
 
         _currentStamina = Mathf.Clamp(_currentStamina, 0f, 1f);
         UI_Main.Instance.RefreshStaminaSlider(_currentStamina);
 
         Jumping();
-
         Running();
-
-        dir = Rolling(dir);
+        moveDir = Rolling(moveDir);
 
         _wasClimbing = _isClimbing;
 
@@ -92,19 +85,20 @@ public class PlayerMove : PlayerBase
             {
                 _yVelocity = 0f;
             }
-
             _yVelocity += GRAVITY * Time.deltaTime;
-            dir.y = _yVelocity;
         }
 
-        _characterController.Move(dir * _moveSpeed * Time.deltaTime);
+        Vector3 finalMove = moveDir * _moveSpeed;
+        finalMove.y = _yVelocity;
 
-        // 달리기 끝날 때 위치 보정
+        _characterController.Move(finalMove * Time.deltaTime);
+
         if (Input.GetKeyUp(KeyCode.LeftShift))
         {
             _player.Model.transform.localPosition = new Vector3(0.058f, -1f, -0.02f);
         }
     }
+
 
     private void HandleStamina()
     {
@@ -158,18 +152,25 @@ public class PlayerMove : PlayerBase
     {
         if (_characterController.isGrounded)
         {
+            if (_jumpCount != JUMPCOUNT)
+            {
+                // 착지 직후에만 SetModelRotation 호출
+                _player.SetModelRotation();
+            }
+
             _jumpCount = JUMPCOUNT;
             _yVelocity = 0f;
         }
 
         if (Input.GetButtonDown("Jump") && _jumpCount > 0)
         {
-            // 조준선 퍼지기
+            _player.Animator.SetTrigger("Jump");
             UI_Main.Instance.Crosshair.Recoil();
             _yVelocity = _playerData.JumpPower;
             _jumpCount--;
         }
     }
+
 
 
     private Vector3 Rolling(Vector3 dir)

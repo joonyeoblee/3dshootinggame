@@ -19,6 +19,7 @@ public class UI_Main : Singleton<UI_Main>
     [SerializeField] private GameObject _gameState;
     [SerializeField] private TMP_Text _gameStateText;
 
+    [SerializeField] private Image _sniperImage;
     protected override void Start()
     {
         base.Start();
@@ -114,5 +115,13 @@ public class UI_Main : Singleton<UI_Main>
     {
         _gameState.SetActive(true);
         _gameStateText.text = "Game Over!";
+    }
+
+    public void ToggleSniperImage()
+    {
+        // false true
+        bool isActive = _sniperImage.gameObject.activeSelf;
+        Crosshair.gameObject.SetActive(isActive);
+        _sniperImage.gameObject.SetActive(!isActive);
     }
 }
