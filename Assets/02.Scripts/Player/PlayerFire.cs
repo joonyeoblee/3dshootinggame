@@ -280,4 +280,36 @@ public class PlayerFire : PlayerBase
 
         return spreadRot * baseDir;
     }
+
+    private void OnDrawGizmosSelected()
+    {
+    #if UNITY_EDITOR
+        // 1. 범위 반지름 구체
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, Radius);
+
+        // 2. 시야각 (Angle) 시각화
+        Vector3 forward = transform.forward;
+        Quaternion leftRot = Quaternion.AngleAxis(-Angle * 0.5f, Vector3.up);
+        Quaternion rightRot = Quaternion.AngleAxis(Angle * 0.5f, Vector3.up);
+
+        Vector3 leftDir = leftRot * forward;
+        Vector3 rightDir = rightRot * forward;
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(transform.position, transform.position + leftDir * Radius);
+        Gizmos.DrawLine(transform.position, transform.position + rightDir * Radius);
+
+        // 시각적 확인을 위해 부채꼴 내부 채우기 (옵션)
+        int segments = 20;
+        for (int i = 0; i <= segments; i++)
+        {
+            float angle = -Angle * 0.5f + Angle / segments * i;
+            Quaternion rot = Quaternion.AngleAxis(angle, Vector3.up);
+            Vector3 dir = rot * forward;
+            Gizmos.DrawLine(transform.position, transform.position + dir * Radius);
+        }
+    #endif
+    }
+
 }
