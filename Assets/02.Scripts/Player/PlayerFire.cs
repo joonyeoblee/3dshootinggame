@@ -1,5 +1,6 @@
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.VFX;
 public class PlayerFire : PlayerBase
 {
     // 목표 : 마우스 왼쪽 버튼을 누르면 카메라가 바라보는 방향으로 총을 발사하고 싶다
@@ -39,6 +40,7 @@ public class PlayerFire : PlayerBase
     private bool _isSlashing;
     private readonly float _slashCooldown = 2f;
     private float _slashTimer;
+    [SerializeField] private VisualEffect vfx;
 
     public float ZoomInSize = 15f;
     public float ZoomOutSize = 60f;
@@ -63,7 +65,7 @@ public class PlayerFire : PlayerBase
 
         SniperZoom();
         // TODO: 폭탄 발싸 3번으로 바꿔야함
-        // Bomb();
+        Bomb();
 
         if (_player.GunMode)
         {
@@ -201,6 +203,7 @@ public class PlayerFire : PlayerBase
         float halfAngleRad = Angle * 0.5f * Mathf.Deg2Rad;
         float cosHalfAngle = Mathf.Cos(halfAngleRad);
         _player.Animator.SetTrigger("Slash");
+        // vfx.Play(); // 또는 vfx.SendEvent("OnPlay");
         foreach (Collider hit in hits)
         {
             Vector3 dirToTarget = (hit.transform.position - transform.position).normalized;
@@ -235,26 +238,33 @@ public class PlayerFire : PlayerBase
             }
         }
     }
+    [SerializeField] private string throwAnimName = "ThrowBomb";
     private void Bomb()
     {
+        if (Input.GetKeyDown(KeyCode.Alpha3) && _currentBombCount > 0)
+        {
+            // 애니메이션 재생 + 멈춤 (0초 지점)
+            _player.Animator.Play(throwAnimName, 0, 1.5f / 3.0f);
+            _player.Animator.speed = 0f;
+        }
 
-        if (Input.GetMouseButton(1) && _currentBombCount > 0)
+        if (Input.GetKey(KeyCode.Alpha3) && _currentBombCount > 0)
         {
             // 파워 모으기
             ThrowPower += Time.deltaTime * ThrowPowerPerDeltaTime;
             UI_Main.Instance.RefreshBombGaugeSlider(ThrowPower);
         }
 
-        // 2. 오른쪽 버튼 입력 받기
-        // 0: 왼쪽, 1: 오른쪽, 2: 휠
-        if (Input.GetMouseButtonUp(1) && _currentBombCount > 0)
+        if (Input.GetKeyUp(KeyCode.Alpha3) && _currentBombCount > 0)
         {
-            // 3. 발사 위치에 수류탄 생성하기
-            Bomb bomb = GameManager.Instance.PoolManager.GetFromPool<Bomb>();
+            // 애니메이션 다시 재생
+            _player.Animator.speed = 1f;
 
+            // 수류탄 생성
+            Bomb bomb = GameManager.Instance.PoolManager.GetFromPool<Bomb>();
             bomb.transform.position = FirePosition.transform.position;
 
-            // 4. 생성된 수류탄을 카메라 방향으로 물리적인 힘 가하기
+            // 힘 가하기
             Rigidbody bombRigidbody = bomb.GetComponent<Rigidbody>();
             bombRigidbody.AddForce(Camera.main.transform.forward * ThrowPower, ForceMode.Impulse);
             bombRigidbody.AddTorque(Vector3.one);
@@ -262,12 +272,44 @@ public class PlayerFire : PlayerBase
             _currentBombCount--;
             UI_Main.Instance.RefreshBombText($"{_currentBombCount} / {_maxBombCount}");
 
-            // 파워 다시 원위치
+            // 파워 초기화
             ThrowPower = 0f;
             UI_Main.Instance.RefreshBombGaugeSlider(ThrowPower);
         }
-
     }
+    // private void Bomb()
+    // {
+    //
+    //     if (Input.GetKey(KeyCode.Alpha3) && _currentBombCount > 0)
+    //     {
+    //         // 파워 모으기
+    //         ThrowPower += Time.deltaTime * ThrowPowerPerDeltaTime;
+    //         UI_Main.Instance.RefreshBombGaugeSlider(ThrowPower);
+    //     }
+    //
+    //     // 2. 오른쪽 버튼 입력 받기
+    //     // 0: 왼쪽, 1: 오른쪽, 2: 휠
+    //     if (Input.GetKeyUp(KeyCode.Alpha3) && _currentBombCount > 0)
+    //     {
+    //         // 3. 발사 위치에 수류탄 생성하기
+    //         Bomb bomb = GameManager.Instance.PoolManager.GetFromPool<Bomb>();
+    //
+    //         bomb.transform.position = FirePosition.transform.position;
+    //
+    //         // 4. 생성된 수류탄을 카메라 방향으로 물리적인 힘 가하기
+    //         Rigidbody bombRigidbody = bomb.GetComponent<Rigidbody>();
+    //         bombRigidbody.AddForce(Camera.main.transform.forward * ThrowPower, ForceMode.Impulse);
+    //         bombRigidbody.AddTorque(Vector3.one);
+    //
+    //         _currentBombCount--;
+    //         UI_Main.Instance.RefreshBombText($"{_currentBombCount} / {_maxBombCount}");
+    //
+    //         // 파워 다시 원위치
+    //         ThrowPower = 0f;
+    //         UI_Main.Instance.RefreshBombGaugeSlider(ThrowPower);
+    //     }
+    //
+    // }
 
     private Vector3 GetBulletDirection()
     {

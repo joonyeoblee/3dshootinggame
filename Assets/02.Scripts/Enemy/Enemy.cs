@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -46,6 +47,13 @@ public class Enemy : MonoBehaviour, IDamageable
     public GameObject[] Models;
 
     public float DyingTime { get; private set; } = 2f;
+
+
+    public Renderer[] Renderers;
+    public Color HitColor = Color.red;
+    public float FlashDuration = 0.1f;
+
+    private Color[] originalColors;
 
     protected virtual void AwakeInit()
     {
@@ -100,7 +108,11 @@ public class Enemy : MonoBehaviour, IDamageable
         // 에이전트 사용으로 변경
         NavAgent = GetComponent<NavMeshAgent>();
         NavAgent.speed = Stat.MoveSpeed;
-
+        originalColors = new Color[Renderers.Length];
+        for (int i = 0; i < Renderers.Length; i++)
+        {
+            originalColors[i] = Renderers[i].material.color;
+        }
     }
 
     private void OnEnable()
@@ -124,6 +136,7 @@ public class Enemy : MonoBehaviour, IDamageable
     {
         Health -= damage.Value;
         HealthBar.fillAmount = Health / 100f;
+        FlashRed();
 
         if (StateMachine.CurrentState.GetType() == typeof(DieState))
         {
@@ -160,6 +173,20 @@ public class Enemy : MonoBehaviour, IDamageable
         yield return new WaitForSeconds(2f);
         gameObject.SetActive(false);
         _poolItem.ReturnToPoolAs<Enemy>();
+    }
+
+    public void FlashRed()
+    {
+        for (int i = 0; i < Renderers.Length; i++)
+        {
+            Material mat = Renderers[i].material;
+
+            // 먼저 즉시 붉은색으로
+            mat.color = HitColor;
+
+            // 일정 시간 후 원래 색으로 부드럽게 복귀
+            mat.DOColor(originalColors[i], FlashDuration);
+        }
     }
 
 }
