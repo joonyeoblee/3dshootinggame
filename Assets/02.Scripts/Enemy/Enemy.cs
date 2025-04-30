@@ -172,7 +172,7 @@ public class Enemy : MonoBehaviour, IDamageable
         Animator.ResetTrigger("Die"); // 트리거 초기화
         yield return new WaitForSeconds(2f);
         GetComponent<ItemSpawner>().DropItem();
-        
+
         gameObject.SetActive(false);
         _poolItem.ReturnToPoolAs<Enemy>();
 
