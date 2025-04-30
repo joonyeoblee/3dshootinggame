@@ -65,7 +65,10 @@ public class PlayerFire : PlayerBase
 
         SniperZoom();
         // TODO: 폭탄 발싸 3번으로 바꿔야함
-        Bomb();
+        if (_player.BombMode)
+        {
+            Bomb();
+        }
 
         if (_player.GunMode)
         {
@@ -241,21 +244,18 @@ public class PlayerFire : PlayerBase
     [SerializeField] private string throwAnimName = "ThrowBomb";
     private void Bomb()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha3) && _currentBombCount > 0)
+        if (Input.GetMouseButton(0) && _currentBombCount > 0)
         {
             // 애니메이션 재생 + 멈춤 (0초 지점)
             _player.Animator.Play(throwAnimName, 0, 1.5f / 3.0f);
             _player.Animator.speed = 0f;
-        }
 
-        if (Input.GetKey(KeyCode.Alpha3) && _currentBombCount > 0)
-        {
             // 파워 모으기
             ThrowPower += Time.deltaTime * ThrowPowerPerDeltaTime;
             UI_Main.Instance.RefreshBombGaugeSlider(ThrowPower);
         }
 
-        if (Input.GetKeyUp(KeyCode.Alpha3) && _currentBombCount > 0)
+        if (Input.GetMouseButtonUp(0) && _currentBombCount > 0)
         {
             // 애니메이션 다시 재생
             _player.Animator.speed = 1f;

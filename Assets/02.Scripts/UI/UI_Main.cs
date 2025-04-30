@@ -20,6 +20,9 @@ public class UI_Main : Singleton<UI_Main>
     [SerializeField] private TMP_Text _gameStateText;
 
     [SerializeField] private Image _sniperImage;
+
+    [SerializeField] private Image _weaponImage;
+    [SerializeField] private Sprite[] _weaponSprite;
     protected override void Start()
     {
         base.Start();
@@ -123,5 +126,10 @@ public class UI_Main : Singleton<UI_Main>
         bool isActive = _sniperImage.gameObject.activeSelf;
         Crosshair.gameObject.SetActive(isActive);
         _sniperImage.gameObject.SetActive(!isActive);
+    }
+
+    public void ChangeWeaponSprite(int index)
+    {
+        _weaponImage.sprite = _weaponSprite[index];
     }
 }

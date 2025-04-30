@@ -171,8 +171,11 @@ public class Enemy : MonoBehaviour, IDamageable
         yield return null; // 한 프레임 기다림
         Animator.ResetTrigger("Die"); // 트리거 초기화
         yield return new WaitForSeconds(2f);
+        GetComponent<ItemSpawner>().DropItem();
+        
         gameObject.SetActive(false);
         _poolItem.ReturnToPoolAs<Enemy>();
+
     }
 
     public void FlashRed()
