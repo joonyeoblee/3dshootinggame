@@ -2,18 +2,16 @@ using Redcode.Pools;
 using UnityEngine;
 public class Bomb : MonoBehaviour, IPoolObject
 {
-    public GameObject ExplosionEffectPrefab;
-
+    public Explore Explore;
     public PoolItem PoolItem;
     private void Start()
     {
+        Explore = GetComponent<Explore>();
         PoolItem = GetComponent<PoolItem>();
     }
     private void OnCollisionEnter(Collision collision)
     {
-        // 폭발 이펙트 생성
-        GameObject effectObject = Instantiate(ExplosionEffectPrefab, transform.position, Quaternion.identity);
-
+        Explore.Explode();
         // 풀로 반환
         PoolItem.ReturnToPoolAs<Bomb>();
 

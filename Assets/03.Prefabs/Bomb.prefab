@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3401285658645580046}
   - component: {fileID: 5137014044158399955}
   - component: {fileID: -3205834999538155093}
+  - component: {fileID: 1962934541049176852}
   m_Layer: 8
   m_Name: Bomb
   m_TagString: Untagged
@@ -151,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5c7a9cd7127b354fbfd5d26c7b3c475, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ExplosionEffectPrefab: {fileID: 100002, guid: 6ecf76dc4f268d340b2666896a954bcc, type: 3}
+  ExplosionEffectPrefab: {fileID: 0}
   PoolItem: {fileID: 0}
 --- !u!114 &-3205834999538155093
 MonoBehaviour:
@@ -165,6 +166,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73df42bcbda74569aea0f6fc68af5d63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1962934541049176852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 532045228954591821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 693b5bf25d01ba643b4f21b1a2bda05d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ExploreVFX: {fileID: 100002, guid: 6ecf76dc4f268d340b2666896a954bcc, type: 3}
+  Damage:
+    Value: 0
+    WeaponPower: 0
+    DamageFrom: {fileID: 0}
 --- !u!1001 &2067100966487385335
 PrefabInstance:
   m_ObjectHideFlags: 0
