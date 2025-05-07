@@ -9,14 +9,24 @@ public class TraceState : IEnemyState
 
     public void Execute(Enemy enemy)
     {
-         if(!GameManager.Instance.IsPlaying) return;
+        if (!GameManager.Instance.IsPlaying) return;
 
-        if (Vector3.Distance(enemy.Player.transform.position, enemy.transform.position) <= enemy.Stat.AttackDistance)
+        int randomNumber = Random.Range(0, 20);
+
+        if (randomNumber < 1 && (enemy.EnemyType == EnemyType.Elite || enemy.EnemyType == EnemyType.Elite1))
+        {
+            enemy.StateMachine.ChangeState(EnemyState.Attack);
+            Debug.Log("!!!!!!!!!!!!!!!!!!!!!!!");
+            enemy.IsSkill = true;
+            return;
+        }
+
+        if (Vector3.Distance(enemy.Player.transform.position, enemy.transform.position) <= enemy.Stat.AttackDistance && !enemy.IsTrace)
         {
             enemy.StateMachine.ChangeState(EnemyState.Attack);
             return;
         }
-        if (Vector3.Distance(enemy.Player.transform.position, enemy.transform.position) >= enemy.Stat.FindDistance)
+        if (Vector3.Distance(enemy.Player.transform.position, enemy.transform.position) >= enemy.Stat.FindDistance && !enemy.IsTrace)
         {
             enemy.StateMachine.ChangeState(EnemyState.Return);
             return;
@@ -24,9 +34,6 @@ public class TraceState : IEnemyState
 
         enemy.NavAgent.SetDestination(enemy.Player.transform.position);
 
-        //Vector3 direction = (enemy.Player.transform.position - enemy.transform.position).normalized;
-        //direction.y = enemy.YVelocity;
-        //enemy.CharacterController.Move(enemy.Stat.MoveSpeed * Time.deltaTime * direction);
     }
 
     public void Exit(Enemy enemy)

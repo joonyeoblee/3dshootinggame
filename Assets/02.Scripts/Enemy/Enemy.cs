@@ -21,7 +21,8 @@ public enum EnemyType
 {
     Normal,
     Trace,
-    Elite
+    Elite,
+    Elite1
 }
 
 
@@ -35,11 +36,14 @@ public class Enemy : MonoBehaviour, IDamageable
     public NavMeshAgent NavAgent { get; private set; }
     public Vector3 StartPosition;
 
-    public int Health { get; set; }
+    public float Health;
     public Image LateHealthBar;
     public Image HealthBar;
     private Coroutine _coroutine;
     public float Duration = 2f;
+    public bool IsTrace;
+
+    public bool IsSkill;
 
     private PoolItem _poolItem;
 
@@ -70,7 +74,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
     protected virtual void AwakeInit()
     {
-        if (EnemyType != EnemyType.Elite)
+        if (EnemyType != EnemyType.Elite && EnemyType != EnemyType.Elite1)
         {
             int random = Random.Range(0, Models.Length);
             EnemyType = (EnemyType)random;
@@ -115,9 +119,10 @@ public class Enemy : MonoBehaviour, IDamageable
     }
     private void Start()
     {
-
         StartPosition = transform.position;
         Stat = EnemyStats.GetData(EnemyType);
+        Health = Stat.MaxHealth;
+
         Player = GameObject.FindGameObjectWithTag("Player");
         _poolItem = GetComponent<PoolItem>();
 
@@ -138,7 +143,6 @@ public class Enemy : MonoBehaviour, IDamageable
 
     public void Init()
     {
-        Health = 100;
         StateMachine.ChangeState(EnemyState.Idle);
     }
     private void Update()
@@ -151,12 +155,19 @@ public class Enemy : MonoBehaviour, IDamageable
     public void TakeDamage(Damage damage)
     {
         Health -= damage.Value;
-        HealthBar.fillAmount = Health / 100f;
+        HealthBar.fillAmount = Health / Stat.MaxHealth;
+        // Debug.Log($"Health: {Health}, MaxHealth: {Stat.MaxHealth}, FillAmount: {HealthBar.fillAmount}");
+
         FlashRed();
 
         if (StateMachine.CurrentState.GetType() == typeof(DieState))
         {
             return;
+        }
+        float healthPercent = Health / Stat.MaxHealth;
+        if ((EnemyType == EnemyType.Elite1 || EnemyType == EnemyType.Elite) && healthPercent <= 0.3f)
+        {
+            BossPhase();
         }
 
         if (Health <= 0)
@@ -187,6 +198,14 @@ public class Enemy : MonoBehaviour, IDamageable
             yield return null;
         }
     }
+
+    public void BossPhase()
+    {
+        transform.DOScale(1f, 0.3f);
+        IsTrace = true;
+        NavAgent.speed = Stat.MoveSpeed + 1.3f;
+
+    }
     public void Die()
     {
         StartCoroutine(Die_Coroutine());
@@ -196,12 +215,13 @@ public class Enemy : MonoBehaviour, IDamageable
         Animator.SetTrigger("Die");
         yield return null; // 한 프레임 기다림
         Animator.ResetTrigger("Die"); // 트리거 초기화
-        if (EnemyType == EnemyType.Elite)
+        yield return new WaitForSeconds(1f);
+
+        if (EnemyType == EnemyType.Elite || EnemyType == EnemyType.Elite1)
         {
             GetComponent<Explore>().Explode();
-        }
 
-        yield return new WaitForSeconds(1f);
+        }
         GetComponent<ItemSpawner>().DropItem();
 
         gameObject.SetActive(false);

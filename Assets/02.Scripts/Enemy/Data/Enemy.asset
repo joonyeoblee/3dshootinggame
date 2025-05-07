@@ -35,6 +35,16 @@ MonoBehaviour:
     AttackDamage: 20
   - EnemyType: 2
     MoveSpeed: 5
+    AttackCoolTime: 1
+    MaxHealth: 500
+    FindDistance: 20
+    AttackDistance: 5
+    ReturnDistance: 20
+    DamagedTime: 0.5
+    IdleToPatrolTime: 2
+    AttackDamage: 1
+  - EnemyType: 3
+    MoveSpeed: 5
     AttackCoolTime: 4
     MaxHealth: 500
     FindDistance: 20
