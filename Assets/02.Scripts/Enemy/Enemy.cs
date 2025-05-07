@@ -36,7 +36,10 @@ public class Enemy : MonoBehaviour, IDamageable
     public Vector3 StartPosition;
 
     public int Health { get; set; }
+    public Image LateHealthBar;
     public Image HealthBar;
+    private Coroutine _coroutine;
+    public float Duration = 2f;
 
     private PoolItem _poolItem;
 
@@ -59,7 +62,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
 
     public float Radius;
-    private readonly List<Vector3> _patrolPoints = new List<Vector3>();
+    // private readonly List<Vector3> _patrolPoints = new List<Vector3>();
     private int _patrolIndex;
     private bool _isSlashing;
     public float Angle;
@@ -164,16 +167,26 @@ public class Enemy : MonoBehaviour, IDamageable
         {
             StateMachine.ChangeState(EnemyState.Damaged);
         }
+
+        if (LateHealthBar == null) return;
+
+        if (_coroutine != null)
+        {
+            StopCoroutine(_coroutine);
+        }
+        _coroutine = StartCoroutine(ReduceValueOverTime(LateHealthBar.fillAmount, HealthBar.fillAmount, Duration));
     }
-    // public void DealDamage()
-    // {
-    //     Debug.Log("애니메이션 이벤트로 공격함!");
-    //
-    //     if (Player == null) return;
-    //
-    //     Damage damage = new Damage(Stat.AttackDamage, 0, gameObject);
-    //     Player.GetComponent<Player>().TakeDamage(damage);
-    // }
+    private IEnumerator ReduceValueOverTime(float start, float end, float time)
+    {
+        float t = 0f;
+
+        while (t < time)
+        {
+            LateHealthBar.fillAmount = Mathf.Lerp(start, end, t / time);
+            t += Time.deltaTime;
+            yield return null;
+        }
+    }
     public void Die()
     {
         StartCoroutine(Die_Coroutine());
@@ -183,7 +196,12 @@ public class Enemy : MonoBehaviour, IDamageable
         Animator.SetTrigger("Die");
         yield return null; // 한 프레임 기다림
         Animator.ResetTrigger("Die"); // 트리거 초기화
-        yield return new WaitForSeconds(2f);
+        if (EnemyType == EnemyType.Elite)
+        {
+            GetComponent<Explore>().Explode();
+        }
+
+        yield return new WaitForSeconds(1f);
         GetComponent<ItemSpawner>().DropItem();
 
         gameObject.SetActive(false);
