@@ -7,9 +7,13 @@ public class PatrolState : IEnemyState
 
     private float _changePointTimer;
     public float RandomRange = 7f;
+    private bool _destinationReached;
+
     public void Enter(Enemy enemy)
     {
         _changePointTimer = 0;
+        _destinationReached = true;
+        enemy.Animator.SetTrigger("Walk");
 
         if (_patrolPoints.Count != 3)
         {
@@ -18,40 +22,45 @@ public class PatrolState : IEnemyState
             {
                 _patrolPoints.Add(GetRandomPatrolPoint(enemy.StartPosition));
             }
-            _patrolPoints.Add(enemy.StartPosition); // 마지막은 시작 위치
+            _patrolPoints.Add(enemy.StartPosition);
         }
-        _nextPoint = _patrolPoints[0];
     }
-    private Vector3 GetRandomPatrolPoint(Vector3 StartPosition)
+
+    private Vector3 GetRandomPatrolPoint(Vector3 startPosition)
     {
         return new Vector3(Random.Range(-RandomRange, RandomRange), 0,
-            Random.Range(-RandomRange, RandomRange)) + StartPosition;
+            Random.Range(-RandomRange, RandomRange)) + startPosition;
     }
 
     public void Execute(Enemy enemy)
     {
-        if(!GameManager.Instance.IsPlaying) return;
-        Debug.Log("Patrol");
-        _changePointTimer += Time.deltaTime;
+        if (!GameManager.Instance.IsPlaying) return;
 
-        if (Vector3.Distance(_nextPoint, enemy.transform.position) <= enemy.Stat.ReturnDistance || _changePointTimer >= 3f)
-        {
-            _nextPoint = _patrolPoints[Random.Range(0, _patrolPoints.Count)];
-            _changePointTimer = 0;
-        }
         if (Vector3.Distance(enemy.transform.position, enemy.Player.transform.position) <= enemy.Stat.FindDistance)
         {
             enemy.StateMachine.ChangeState(EnemyState.Trace);
+            return;
         }
 
-        enemy.NavAgent.SetDestination(_nextPoint);
+        _changePointTimer += Time.deltaTime;
 
+        if (_destinationReached || _changePointTimer >= 3f)
+        {
+            _nextPoint = _patrolPoints[Random.Range(0, _patrolPoints.Count)];
+            enemy.NavAgent.SetDestination(_nextPoint);
+
+            _destinationReached = false;
+            _changePointTimer = 0;
+        }
+
+        if (!enemy.NavAgent.pathPending && enemy.NavAgent.remainingDistance <= enemy.Stat.ReturnDistance)
+        {
+            _destinationReached = true;
+        }
     }
 
     public void Exit(Enemy enemy)
     {
         enemy.NavAgent.ResetPath();
     }
-
-
 }

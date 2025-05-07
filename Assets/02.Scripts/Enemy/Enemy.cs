@@ -20,8 +20,10 @@ public enum EnemyState
 public enum EnemyType
 {
     Normal,
-    Trace
+    Trace,
+    Elite
 }
+
 
 public class Enemy : MonoBehaviour, IDamageable
 {
@@ -55,16 +57,27 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private Color[] originalColors;
 
+
+    public float Radius;
+    private readonly List<Vector3> _patrolPoints = new List<Vector3>();
+    private int _patrolIndex;
+    private bool _isSlashing;
+    public float Angle;
+    public LayerMask TargetMask;
+
     protected virtual void AwakeInit()
     {
-        int random = Random.Range(0, Models.Length);
-        EnemyType = (EnemyType)random;
-        foreach (GameObject model in Models)
+        if (EnemyType != EnemyType.Elite)
         {
-            model.SetActive(false);
+            int random = Random.Range(0, Models.Length);
+            EnemyType = (EnemyType)random;
+            foreach(GameObject model in Models)
+            {
+                model.SetActive(false);
+            }
+            Models[random].SetActive(true);
+            Animator = Models[random].GetComponent<Animator>();
         }
-        Models[random].SetActive(true);
-        Animator = Models[random].GetComponent<Animator>();
 
         Dictionary<EnemyState, IEnemyState> dict = new Dictionary<EnemyState, IEnemyState>
         {
@@ -152,15 +165,15 @@ public class Enemy : MonoBehaviour, IDamageable
             StateMachine.ChangeState(EnemyState.Damaged);
         }
     }
-    public void DealDamage()
-    {
-        Debug.Log("애니메이션 이벤트로 공격함!");
-
-        if (Player == null) return;
-
-        Damage damage = new Damage(Stat.AttackDamage, 0, gameObject);
-        Player.GetComponent<Player>().TakeDamage(damage);
-    }
+    // public void DealDamage()
+    // {
+    //     Debug.Log("애니메이션 이벤트로 공격함!");
+    //
+    //     if (Player == null) return;
+    //
+    //     Damage damage = new Damage(Stat.AttackDamage, 0, gameObject);
+    //     Player.GetComponent<Player>().TakeDamage(damage);
+    // }
     public void Die()
     {
         StartCoroutine(Die_Coroutine());
@@ -190,6 +203,37 @@ public class Enemy : MonoBehaviour, IDamageable
             // 일정 시간 후 원래 색으로 부드럽게 복귀
             mat.DOColor(originalColors[i], FlashDuration);
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+    #if UNITY_EDITOR
+        // 1. 범위 반지름 구체
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, Radius);
+
+        // 2. 시야각 (Angle) 시각화
+        Vector3 forward = transform.forward;
+        Quaternion leftRot = Quaternion.AngleAxis(-Angle * 0.5f, Vector3.up);
+        Quaternion rightRot = Quaternion.AngleAxis(Angle * 0.5f, Vector3.up);
+
+        Vector3 leftDir = leftRot * forward;
+        Vector3 rightDir = rightRot * forward;
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(transform.position, transform.position + leftDir * Radius);
+        Gizmos.DrawLine(transform.position, transform.position + rightDir * Radius);
+
+        // 시각적 확인을 위해 부채꼴 내부 채우기 (옵션)
+        int segments = 20;
+        for (int i = 0; i <= segments; i++)
+        {
+            float angle = -Angle * 0.5f + Angle / segments * i;
+            Quaternion rot = Quaternion.AngleAxis(angle, Vector3.up);
+            Vector3 dir = rot * forward;
+            Gizmos.DrawLine(transform.position, transform.position + dir * Radius);
+        }
+    #endif
     }
 
 }

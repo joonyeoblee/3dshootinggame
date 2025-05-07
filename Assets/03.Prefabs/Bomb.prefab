@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5c7a9cd7127b354fbfd5d26c7b3c475, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ExplosionEffectPrefab: {fileID: 0}
+  Explore: {fileID: 0}
   PoolItem: {fileID: 0}
 --- !u!114 &-3205834999538155093
 MonoBehaviour:
@@ -180,7 +180,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ExploreVFX: {fileID: 100002, guid: 6ecf76dc4f268d340b2666896a954bcc, type: 3}
   Damage:
-    Value: 0
+    Value: 40
     WeaponPower: 0
     DamageFrom: {fileID: 0}
 --- !u!1001 &2067100966487385335

@@ -22,6 +22,7 @@ MonoBehaviour:
     ReturnDistance: 10
     DamagedTime: 0.5
     IdleToPatrolTime: 2
+    AttackDamage: 20
   - EnemyType: 1
     MoveSpeed: 4
     AttackCoolTime: 2
@@ -31,3 +32,14 @@ MonoBehaviour:
     ReturnDistance: 1000
     DamagedTime: 0.5
     IdleToPatrolTime: 2
+    AttackDamage: 20
+  - EnemyType: 2
+    MoveSpeed: 5
+    AttackCoolTime: 4
+    MaxHealth: 500
+    FindDistance: 20
+    AttackDistance: 5
+    ReturnDistance: 20
+    DamagedTime: 0.5
+    IdleToPatrolTime: 2
+    AttackDamage: 1

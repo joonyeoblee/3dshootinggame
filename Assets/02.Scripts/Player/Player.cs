@@ -146,9 +146,6 @@ public class Player : MonoBehaviour, IDamageable
         Model.transform.localPosition = new Vector3(0.058f, -1f, -0.02f);
     }
 
-
-
-
     private void Die()
     {
         GameManager.Instance.EndGame();

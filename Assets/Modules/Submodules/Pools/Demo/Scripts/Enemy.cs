@@ -1,8 +1,6 @@
+using System;
 using Redcode.Pools;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
 public class Enemy : MonoBehaviour, IPoolObject
 {
     public enum State { Alive, Died }
@@ -10,7 +8,7 @@ public class Enemy : MonoBehaviour, IPoolObject
 
     private State _state;
 
-    // Called when getting this object from pool.
+    // Called when getting this object from pool.s
     public void OnGettingFromPool()
     {
         _state = State.Alive;
@@ -21,7 +19,7 @@ public class Enemy : MonoBehaviour, IPoolObject
 
     public void OnCreatedInPool()
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 }
 

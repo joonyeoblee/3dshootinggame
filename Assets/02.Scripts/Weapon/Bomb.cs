@@ -1,6 +1,5 @@
-using Redcode.Pools;
 using UnityEngine;
-public class Bomb : MonoBehaviour, IPoolObject
+public class Bomb : MonoBehaviour
 {
     public Explore Explore;
     public PoolItem PoolItem;
@@ -15,11 +14,6 @@ public class Bomb : MonoBehaviour, IPoolObject
         // 풀로 반환
         PoolItem.ReturnToPoolAs<Bomb>();
 
-    }
-
-    public void OnCreatedInPool()
-    {
-        // 최초 생성 시 호출 (선택적 초기화)
     }
 
     public void OnGettingFromPool()

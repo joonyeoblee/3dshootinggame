@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-
 public class ReturnState : IEnemyState
 {
     public void Enter(Enemy enemy)
@@ -15,7 +14,7 @@ public class ReturnState : IEnemyState
             // enemy.transform.position = enemy.StartPosition;
             enemy.NavAgent.SetDestination(enemy.StartPosition);
 
-            if (Vector3.Distance(enemy.transform.position, enemy.StartPosition) <= 0.1f)
+            if (Vector3.Distance(enemy.transform.position, enemy.StartPosition) <= 1f)
             {
                 enemy.StateMachine.ChangeState(EnemyState.Idle);
             }

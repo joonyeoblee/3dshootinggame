@@ -1,11 +1,11 @@
 using Redcode.Pools;
 using UnityEngine;
-
 public class GameManager : Singleton<GameManager>
 {
     public PoolManager PoolManager;
 
     public bool IsPlaying;
+    public GameObject Player;
 
     private void Start()
     {
