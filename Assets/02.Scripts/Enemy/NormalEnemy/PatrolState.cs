@@ -34,7 +34,12 @@ public class PatrolState : IEnemyState
 
     public void Execute(Enemy enemy)
     {
-        if (!GameManager.Instance.IsPlaying) return;
+        if (!GameManager.Instance.IsPlaying)
+        {
+            enemy.NavAgent.isStopped = true;
+            enemy.NavAgent.ResetPath();
+            return;
+        }
 
         if (Vector3.Distance(enemy.transform.position, enemy.Player.transform.position) <= enemy.Stat.FindDistance)
         {

@@ -47,10 +47,7 @@ public class Player : MonoBehaviour, IDamageable
 
     private void Update()
     {
-        if (!GameManager.Instance.IsPlaying)
-        {
-            return;
-        }
+
         Animator.SetLayerWeight(2, 1 - Health / PlayerData.MaxHealth - 0.5f);
 
         // 마우스 휠로 _weaponIndex 변경
@@ -148,6 +145,6 @@ public class Player : MonoBehaviour, IDamageable
 
     private void Die()
     {
-        GameManager.Instance.EndGame();
+        // GameManager.Instance.EndGame();
     }
 }

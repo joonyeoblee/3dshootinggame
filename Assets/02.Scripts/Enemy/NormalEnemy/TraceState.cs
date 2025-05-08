@@ -9,14 +9,18 @@ public class TraceState : IEnemyState
 
     public void Execute(Enemy enemy)
     {
-        if (!GameManager.Instance.IsPlaying) return;
+        if (!GameManager.Instance.IsPlaying)
+        {
+            enemy.NavAgent.isStopped = true;
+            enemy.NavAgent.ResetPath();
+            return;
+        }
 
         int randomNumber = Random.Range(0, 20);
 
         if (randomNumber < 1 && (enemy.EnemyType == EnemyType.Elite || enemy.EnemyType == EnemyType.Elite1))
         {
             enemy.StateMachine.ChangeState(EnemyState.Attack);
-            Debug.Log("!!!!!!!!!!!!!!!!!!!!!!!");
             enemy.IsSkill = true;
             return;
         }

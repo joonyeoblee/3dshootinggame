@@ -11,7 +11,12 @@ public class IdleState : IEnemyState
 
     public void Execute(Enemy enemy)
     {
-        if(!GameManager.Instance.IsPlaying) return;
+        if (!GameManager.Instance.IsPlaying)
+        {
+            enemy.NavAgent.isStopped = true;
+            enemy.NavAgent.ResetPath();
+            return;
+        }
 
         _timer += Time.deltaTime;
         if (_timer >= enemy.Stat.IdleToPatrolTime)

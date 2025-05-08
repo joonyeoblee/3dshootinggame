@@ -147,6 +147,10 @@ public class Enemy : MonoBehaviour, IDamageable
     }
     private void Update()
     {
+        NavAgent.isStopped = !GameManager.Instance.IsPlaying;
+        Debug.Log(NavAgent.isStopped);
+        if (!GameManager.Instance.IsPlaying) return;
+
         StateMachine.Update();
         Debug.Log(StateMachine.CurrentState);
     }

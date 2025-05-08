@@ -110,7 +110,7 @@ public class UI_Main : Singleton<UI_Main>
             _gameStateText.text = message;
             yield return new WaitForSeconds(_waitTime);
         }
-        GameManager.Instance.StartGame();
+        // GameManager.Instance.Pause();
         _gameState.SetActive(false);
     }
 

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-
 public class EnemyStateMachine
 {
     private readonly Enemy _enemy;
@@ -36,6 +35,12 @@ public class EnemyStateMachine
 
     public void Update()
     {
+        if (!GameManager.Instance.IsPlaying)
+        {
+            _enemy.NavAgent.isStopped = true;
+            _enemy.NavAgent.ResetPath();
+            return;
+        }
         _currentState?.Execute(_enemy);
     }
 
