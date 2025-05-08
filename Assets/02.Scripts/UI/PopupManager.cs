@@ -13,10 +13,10 @@ public class PopupManager : MonoBehaviour
 
 
     [Header("팝업 UI 참조")]
-    public List<UI_Popup> Popups; // 모든 팝업을 관리하는데
+    public Stack<UI_Popup> Popups; // 모든 팝업을 관리하는데
 
-    private readonly List<UI_Popup> _openedPopups = new List<UI_Popup>(); // null은 아니지만 비어있는 리스트
-
+    private readonly Stack<UI_Popup> _openedPopups = new Stack<UI_Popup>(); // null은 아니지만 비어있는 리스트
+    // 1. 
     private void Awake()
     {
         Instance = this;
@@ -35,7 +35,7 @@ public class PopupManager : MonoBehaviour
             {
                 popup.Open(closeCallback);
                 // 팝업을 열 때마다 담는다.
-                _openedPopups.Add(popup);
+                _openedPopups.Push(popup);
                 break;
             }
         }
@@ -49,11 +49,13 @@ public class PopupManager : MonoBehaviour
             {
                 while (true)
                 {
-                    bool opend = _openedPopups[_openedPopups.Count - 1].isActiveAndEnabled;
-                    _openedPopups[_openedPopups.Count - 1].Close();
-                    _openedPopups.RemoveAt(_openedPopups.Count - 1);
+                    UI_Popup popup = _openedPopups.Pop();
 
-                    if (opend || _openedPopups.Count == 0)
+                    bool opend = popup.isActiveAndEnabled;
+
+                    popup.Close();
+
+                    if (opend || _openedPopups.Peek() == null)
                     {
                         break;
                     }
