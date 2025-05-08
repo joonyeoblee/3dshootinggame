@@ -17,7 +17,6 @@ public class GameManager : Singleton<GameManager>
     public bool IsPlaying;
     public GameObject Player;
 
-    public GameObject UI_Option;
     private EGameState _gameState;
 
     private void Start()
