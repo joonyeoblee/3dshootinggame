@@ -293,7 +293,12 @@ MonoBehaviour:
   EnemyStats: {fileID: 11400000, guid: 0afe73c14abe04645a7b6244df2b6ff8, type: 2}
   EnemyType: 0
   StartPosition: {x: 0, y: 0, z: 0}
+  Health: 0
+  LateHealthBar: {fileID: 0}
   HealthBar: {fileID: 5263886757792903331}
+  Duration: 2
+  IsTrace: 0
+  IsSkill: 0
   Animator: {fileID: 4816402883360731664}
   Models:
   - {fileID: 3600243010004071344}
@@ -318,6 +323,13 @@ MonoBehaviour:
   - {fileID: 6583062153155066063}
   HitColor: {r: 1, g: 0, b: 0, a: 1}
   FlashDuration: 0.2
+  Radius: 0
+  Angle: 0
+  TargetMask:
+    serializedVersion: 2
+    m_Bits: 0
+  Muzzle: {fileID: 0}
+  Barrel: {fileID: 0}
 --- !u!114 &6501965677067768572
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -799,7 +811,7 @@ PrefabInstance:
     - target: {fileID: 7537417665459280382, guid: d58be77cba3adf54cb14b15052b86514, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 2c3407f67b246464a9ad8a87eb678c7c, type: 2}
+      objectReference: {fileID: 9100000, guid: fd923e7520e85c44ab6b422f26a9b313, type: 2}
     - target: {fileID: 7569792997643425785, guid: d58be77cba3adf54cb14b15052b86514, type: 3}
       propertyPath: m_Layer
       value: 10
@@ -858,6 +870,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea8b9a3d28744b75b270ea186b65f031, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Barrel: {fileID: 0}
 --- !u!95 &4816402883360731664 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 7537417665459280382, guid: d58be77cba3adf54cb14b15052b86514, type: 3}
@@ -1204,7 +1217,7 @@ PrefabInstance:
     - target: {fileID: 7269525453101664401, guid: a5295e78cd3f41f4d9ccd1f82ccb9e0e, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 2c3407f67b246464a9ad8a87eb678c7c, type: 2}
+      objectReference: {fileID: 9100000, guid: fd923e7520e85c44ab6b422f26a9b313, type: 2}
     - target: {fileID: 7419191053682259640, guid: a5295e78cd3f41f4d9ccd1f82ccb9e0e, type: 3}
       propertyPath: m_Layer
       value: 10
@@ -1359,6 +1372,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea8b9a3d28744b75b270ea186b65f031, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Barrel: {fileID: 0}
 --- !u!137 &6849227839030473986 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 4361372114966650510, guid: a5295e78cd3f41f4d9ccd1f82ccb9e0e, type: 3}

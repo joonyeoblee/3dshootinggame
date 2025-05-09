@@ -44,6 +44,7 @@ public class GameManager : Singleton<GameManager>
 
     public void Restart()
     {
+
         _gameState = EGameState.Run;
         Time.timeScale = 1;
 

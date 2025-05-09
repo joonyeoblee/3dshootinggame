@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Random = UnityEngine.Random;
 public class Barrel : MonoBehaviour, IDamageable
 {
     public int Health { get; set; }
@@ -14,6 +15,7 @@ public class Barrel : MonoBehaviour, IDamageable
     private Rigidbody _rigidbody;
 
     public float explosionForce = 2f;
+    public bool IsThrow;
 
     private void Start()
     {
@@ -59,7 +61,7 @@ public class Barrel : MonoBehaviour, IDamageable
     private void OnDeath()
     {
         _isDead = true;
-
+        IsThrow = false;
         _explore.Explode();
 
         BeforeExploreObject.SetActive(false);
@@ -73,5 +75,14 @@ public class Barrel : MonoBehaviour, IDamageable
     {
         yield return new WaitForSeconds(_deleteTime);
         Destroy(gameObject);
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (!IsThrow) return;
+        if (other.gameObject.CompareTag("Ground"))
+        {
+            OnDeath();
+        }
     }
 }

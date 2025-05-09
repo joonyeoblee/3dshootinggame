@@ -71,7 +71,8 @@ public class Enemy : MonoBehaviour, IDamageable
     private bool _isSlashing;
     public float Angle;
     public LayerMask TargetMask;
-
+    public GameObject Muzzle;
+    public GameObject Barrel;
     protected virtual void AwakeInit()
     {
         if (EnemyType != EnemyType.Elite && EnemyType != EnemyType.Elite1)

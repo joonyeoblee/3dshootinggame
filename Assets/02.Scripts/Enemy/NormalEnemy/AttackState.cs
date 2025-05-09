@@ -77,6 +77,7 @@ public class AttackState : IEnemyState
 
     private void Throw(Enemy enemy)
     {
+        enemy.Barrel.SetActive(true);
         enemy.Animator.SetTrigger("Skill");
     }
 

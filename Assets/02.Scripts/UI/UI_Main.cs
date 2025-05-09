@@ -97,6 +97,7 @@ public class UI_Main : Singleton<UI_Main>
 
     private IEnumerator GameState_Coroutine()
     {
+
         string[] messages =
         {
             "Ready.",
@@ -110,7 +111,7 @@ public class UI_Main : Singleton<UI_Main>
             _gameStateText.text = message;
             yield return new WaitForSeconds(_waitTime);
         }
-        // GameManager.Instance.Pause();
+        GameManager.Instance.IsPlaying = true;
         _gameState.SetActive(false);
     }
 

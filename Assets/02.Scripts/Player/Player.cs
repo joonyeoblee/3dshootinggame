@@ -66,7 +66,6 @@ public class Player : MonoBehaviour, IDamageable
         if (Input.GetKeyDown(KeyCode.Alpha1) && !GunMode)
         {
             _weaponIndex = 0;
-
             ApplyWeaponMode();
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2) && !KnifeMode)
