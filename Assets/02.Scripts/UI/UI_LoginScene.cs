@@ -4,6 +4,7 @@ using System.Text;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 [Serializable]
 public class UI_InputField
@@ -151,6 +152,7 @@ public class UI_LoginScene : MonoBehaviour
 
         // 4. 맞다면 로그인
         Debug.Log("로그인 성공!");
+        SceneManager.LoadScene(1);
     }
 
     public void LoginCheck()
